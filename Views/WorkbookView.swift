@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct WorkbookView: View {
+    /// Search Term for searching up
+    @State private var searchTerm: String = ""
+    
     private let gridVSpacing: CGFloat = 40
     
     private let gridItemSize: CGFloat = 220
@@ -29,18 +32,60 @@ struct WorkbookView: View {
             ) {
 #if targetEnvironment(simulator)
                 ForEach(0..<12) { _ in
-                    RoundedRectangle(cornerRadius: 15)
-                        .frame(width: gridItemSize, height: gridItemSize)
-                        .shadow(radius: 3)
+                    WorkbookItemView(size: gridItemSize)
                 }
 #endif
             }
+            .padding()
         }
+        // TODO: Implement Searching
+        .searchable(text: $searchTerm)
+    }
+}
+
+struct WorkbookItemView: View {
+    @Environment(\.colorScheme) var colorScheme
+    
+    var size: CGFloat
+    
+    init(size: CGFloat) {
+        self.size = size
+    }
+    
+    var body: some View {
+        RoundedRectangle(cornerRadius: 15)
+        // TODO: Model Placeholder Reference
+            .fill(Color.white)
+            .frame(width: size, height: size)
+            .shadow(radius: 3)
+            .overlay(alignment: .bottom) {
+                Rectangle()
+                    .fill(
+                        colorScheme == .dark ?  Color(UIColor.systemBackground).opacity(0.75) : Color.secondary.opacity(0.15))
+                    .clipShape(
+                        .rect(
+                            bottomLeadingRadius: 15,
+                            bottomTrailingRadius: 15
+                        )
+                    )
+                    .frame(height: size * 0.33)
+                    .overlay(alignment: .topLeading) {
+                        // TODO: Model Placeholder Reference
+                        VStack(alignment: .leading) {
+                            Text("**Placeholder Text**")
+                            Text("Placeholder Text")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        .padding(10)
+                    }
+            }
     }
 }
 
 #Preview {
     WorkbookView()
+        .preferredColorScheme(.light)
 }
 
 #Preview("View in Dashboard") {

@@ -42,6 +42,7 @@ struct DashboardView: View {
                             LearnView()
                         case .practice:
                             PracticeView()
+                            
                         case .workbook:
                             WorkbookView()
                         }
@@ -51,7 +52,7 @@ struct DashboardView: View {
                 } else {
                     /// Provide sample display to get started
                     ///
-                    /// TODO: Update this with some better UI and icon
+                    // TODO: Update this with some better UI and icon
                     Text("Select an activity from the sidebar.")
                         .navigationTitle("Dashboard")
                 }

@@ -5,6 +5,7 @@ import SwiftUI
 /// The dashboard view also acts as the entry for the user to either go
 ///
 struct DashboardView: View {
+    // TODO: Categorize Features into a model
 
     /// The initialiser is just for the sake of previewing/testing
     init(appActivity: AppActivity? = nil) {
@@ -13,6 +14,9 @@ struct DashboardView: View {
 
     /// The selected app activity category
     @State private var appActivity: AppActivity?
+    
+    /// Whether to open statistics
+    @State private var openStatsSheet: Bool = false
 
     /// Whether the side bar view is visible
     @State private var sideViewIsVisible = NavigationSplitViewVisibility.automatic
@@ -33,6 +37,7 @@ struct DashboardView: View {
             }
             .navigationTitle("Explore")
         } detail: {
+            
             Group {
                 if let appActivity {
                     /// Select given activity to do
@@ -58,24 +63,31 @@ struct DashboardView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
+#if targetEnvironment(simulator)
+                    Button {
+                        openStatsSheet = true
+                    } label: {
+                        Label("Stats", systemImage: "chart.bar")
+                    }
+#else
                     settingsMenu
+#endif
                 }
+            }
+            .sheet(isPresented: $openStatsSheet) {
+                StatsView()
             }
         }
     }
 
     /// The settings menu, indicated by the cogwheel icon at the top right corner of the screen
+    /// Might not even be needed
     private var settingsMenu: some View {
         Menu {
             Button {
-
+                openStatsSheet = true
             } label: {
                 Label("Stats", systemImage: "chart.bar")
-            }
-            Button {
-
-            } label: {
-                Label("Open Settings", systemImage: "gear")
             }
         } label: {
             Image(systemName: "gear")

@@ -49,6 +49,16 @@ struct WorkbookView: View {
         }
         // TODO: Implement Searching
         .searchable(text: $searchTerm)
+        .toolbar(content: {
+            ToolbarItemGroup(placement: .topBarLeading) {
+                Button {
+                    // TODO: New Workbook
+                    // For more info see ``NoteBookView``
+                } label: {
+                    Image(systemName: "plus")
+                }
+            }
+        })
     }
 }
 

@@ -7,9 +7,51 @@
 
 import SwiftUI
 
+
 struct LevelsView: View {
+    /// Search Term for searching up a workbook
+    @State private var searchTerm: String = ""
+
+    private let gridVSpacing: CGFloat = 40
+
+    private let gridItemSize: CGFloat = 220
+
+    private var gridItems: [GridItem] {
+        return [
+            GridItem(.flexible(), spacing: nil, alignment: nil),
+            GridItem(.flexible(), spacing: nil, alignment: nil),
+            GridItem(.flexible(), spacing: nil, alignment: nil),
+        ]
+    }
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ScrollView {
+            LazyVGrid(
+                columns: gridItems,
+                alignment: .center,
+                spacing: gridVSpacing
+            ) {
+                #if targetEnvironment(simulator)
+                    ForEach(0..<12) { index in
+                        NavigationLink {
+                            // TODO: Pass data down to handwriting view
+                            HandWritingView()
+                        } label: {
+                            VStack {
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill(Color.white)
+                                    .frame(width: gridItemSize, height: gridItemSize)
+                                    .shadow(radius: 4)
+                                Text("Level \(index + 1)")
+                            }
+                        }
+                    }
+                #endif
+            }
+            .padding()
+        }
+        // TODO: Implement Searching
+        .searchable(text: $searchTerm)
     }
 }
 

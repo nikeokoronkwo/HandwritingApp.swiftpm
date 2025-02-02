@@ -5,7 +5,7 @@ import SwiftUI
 /// The dashboard view also acts as the entry for the user to either go
 ///
 struct DashboardView: View {
-    
+
     /// The initialiser is just for the sake of previewing/testing
     init(appActivity: AppActivity? = nil) {
         self.appActivity = appActivity
@@ -42,7 +42,7 @@ struct DashboardView: View {
                             LearnView()
                         case .practice:
                             PracticeView()
-                            
+
                         case .workbook:
                             WorkbookView()
                         }

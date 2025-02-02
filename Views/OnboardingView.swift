@@ -11,7 +11,7 @@ import SwiftUI
 struct OnboardingView: View {
     /// Whether the user has been onboarded
     @AppStorage("isOnboarded") var userIsOnboarded: Bool?
-    
+
     /// The main body of the view
     var body: some View {
         NavigationStack {

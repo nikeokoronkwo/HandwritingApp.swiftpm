@@ -10,11 +10,11 @@ import SwiftUI
 struct WorkbookView: View {
     /// Search Term for searching up
     @State private var searchTerm: String = ""
-    
+
     private let gridVSpacing: CGFloat = 40
-    
+
     private let gridItemSize: CGFloat = 220
-    
+
     private var gridItems: [GridItem] {
         return [
             GridItem(.flexible(), spacing: nil, alignment: nil),
@@ -22,7 +22,7 @@ struct WorkbookView: View {
             GridItem(.flexible(), spacing: nil, alignment: nil),
         ]
     }
-    
+
     var body: some View {
         ScrollView {
             LazyVGrid(
@@ -30,11 +30,11 @@ struct WorkbookView: View {
                 alignment: .center,
                 spacing: gridVSpacing
             ) {
-#if targetEnvironment(simulator)
-                ForEach(0..<12) { _ in
-                    WorkbookItemView(size: gridItemSize)
-                }
-#endif
+                #if targetEnvironment(simulator)
+                    ForEach(0..<12) { _ in
+                        WorkbookItemView(size: gridItemSize)
+                    }
+                #endif
             }
             .padding()
         }
@@ -45,23 +45,26 @@ struct WorkbookView: View {
 
 struct WorkbookItemView: View {
     @Environment(\.colorScheme) var colorScheme
-    
+
     var size: CGFloat
-    
+
     init(size: CGFloat) {
         self.size = size
     }
-    
+
     var body: some View {
         RoundedRectangle(cornerRadius: 15)
-        // TODO: Model Placeholder Reference
+            // TODO: Model Placeholder Reference
             .fill(Color.white)
             .frame(width: size, height: size)
             .shadow(radius: 3)
             .overlay(alignment: .bottom) {
                 Rectangle()
                     .fill(
-                        colorScheme == .dark ?  Color(UIColor.systemBackground).opacity(0.75) : Color.secondary.opacity(0.15))
+                        colorScheme == .dark
+                            ? Color(UIColor.systemBackground).opacity(0.75)
+                            : Color.secondary.opacity(0.15)
+                    )
                     .clipShape(
                         .rect(
                             bottomLeadingRadius: 15,

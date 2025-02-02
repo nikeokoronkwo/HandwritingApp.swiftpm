@@ -42,7 +42,6 @@ struct DashboardView: View {
                             LearnView()
                         case .practice:
                             PracticeView()
-
                         case .workbook:
                             WorkbookView()
                         }

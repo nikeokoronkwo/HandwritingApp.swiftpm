@@ -7,8 +7,12 @@
 
 import SwiftUI
 
+/// # Workbook View
+/// This is the workbook view, where users can make "books" which basically represents free space for users to practice their writing skills on an empty canvas and write. They get to use the same tools they previously used for learning here.
+///
+/// The workbooks are stored in the user's device (meta stored in persistence, actual workbook files stored in data folder)
 struct WorkbookView: View {
-    /// Search Term for searching up
+    /// Search Term for searching up a workbook
     @State private var searchTerm: String = ""
 
     private let gridVSpacing: CGFloat = 40
@@ -32,7 +36,12 @@ struct WorkbookView: View {
             ) {
                 #if targetEnvironment(simulator)
                     ForEach(0..<12) { _ in
-                        WorkbookItemView(size: gridItemSize)
+                        NavigationLink {
+                            // TODO: Pass data down to handwriting view
+                            HandWritingView()
+                        } label: {
+                            WorkbookItemView(size: gridItemSize)
+                        }
                     }
                 #endif
             }
@@ -76,6 +85,7 @@ struct WorkbookItemView: View {
                         // TODO: Model Placeholder Reference
                         VStack(alignment: .leading) {
                             Text("**Placeholder Text**")
+                                .foregroundStyle(Color.primary)
                             Text("Placeholder Text")
                                 .font(.caption)
                                 .foregroundColor(.secondary)

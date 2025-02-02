@@ -31,9 +31,14 @@ struct HomeView: View {
 /// The dashboard view also acts as the entry for the user to either go
 ///
 struct DashboardView: View {
+    
+    /// The initialiser is just for the sake of previewing/testing
+    init(appActivity: AppActivity? = nil) {
+        self.appActivity = appActivity
+    }
 
     /// The selected app activity category
-    @State private var appActivity: AppActivity? = nil
+    @State private var appActivity: AppActivity?
 
     /// Whether the side bar view is visible
     @State private var sideViewIsVisible = NavigationSplitViewVisibility.automatic
@@ -60,11 +65,11 @@ struct DashboardView: View {
                     Group {
                         switch appActivity {
                         case .learn:
-                            Text("You selected: \(appActivity)")
+                            LearnView()
                         case .practice:
-                            Text("You selected: \(appActivity)")
+                            PracticeView()
                         case .workbook:
-                            Text("You selected: \(appActivity)")
+                            WorkbookView()
                         }
                     }
                     .navigationTitle(appActivity.rawValue)
@@ -125,6 +130,6 @@ extension AppActivity {
     }
 }
 
-#Preview {
+#Preview("DashboardView") {
     DashboardView()
 }

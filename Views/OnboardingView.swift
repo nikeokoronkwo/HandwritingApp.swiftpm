@@ -19,11 +19,8 @@ struct OnboardingView: View {
                 Text("Welcome to the Handwriting App!")
                 Text("Get started with perfecting your handwriting today")
                 HStack(spacing: 20) {
-                    NavigationLink(destination: Text("Hola")) {
-                        Text("Practice")
-                    }
                     Button("Practice") {
-
+                        userIsOnboarded = true
                     }
                 }
                 .padding(20)

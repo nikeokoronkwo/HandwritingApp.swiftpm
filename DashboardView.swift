@@ -1,31 +1,5 @@
 import SwiftUI
 
-/// The Main View one goes to once the application is opened
-///
-/// In the moment the app is opened, the user is either onboarded, if `userIsOnboarded` is false (meaning that the user is **not** onboarded), or just given options of whether to begin practicing or not
-struct HomeView: View {
-
-    /// The main body of the view
-    var body: some View {
-        NavigationStack {
-            VStack {
-                Text("Welcome to the Handwriting App!")
-                Text("Get started with perfecting your handwriting today")
-                HStack(spacing: 20) {
-                    NavigationLink(destination: Text("Hola")) {
-                        Text("Practice")
-                    }
-                    Button("Practice") {
-
-                    }
-                }
-                .padding(20)
-                .padding(.horizontal, 10)
-            }
-        }
-    }
-}
-
 /// The dashboard view, which contains most of the stuff that the user will interact with.
 ///
 /// The dashboard view also acts as the entry for the user to either go
@@ -72,6 +46,7 @@ struct DashboardView: View {
                             WorkbookView()
                         }
                     }
+                    .padding(.top, 20)
                     .navigationTitle(appActivity.rawValue)
                 } else {
                     /// Provide sample display to get started
@@ -106,14 +81,6 @@ struct DashboardView: View {
             Image(systemName: "gear")
         }
     }
-}
-
-/// # App Activity
-/// This enum is used to denote the given activity the user is doing on th
-enum AppActivity: String, CaseIterable {
-    case learn = "Learn"
-    case practice = "Practice"
-    case workbook = "Workbook"
 }
 
 extension AppActivity {

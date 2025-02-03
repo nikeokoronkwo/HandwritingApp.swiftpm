@@ -22,17 +22,10 @@ protocol WritingCanvas: View {
 
 struct WritingView: WritingCanvas {
     @Environment(\.undoManager) private var undoManager
-    // iOS 17.5
-//    @Environment(\.preferredPencilDoubleTapAction) private var preferredAction
     @StateObject var writingModel: WritingModel = WritingModel()
-    @State internal var canvasView = PKCanvasView()
-    
-    func updateCanvasEraserTool() {
-        
-    }
+    @State var canvasView = PKCanvasView()
 
     var body: some View {
-        NavigationStack {
             ZStack(alignment: .bottom) {
                 ScrollView {
                     ZStack {
@@ -48,9 +41,38 @@ struct WritingView: WritingCanvas {
                 ToolBarComponent(canvasView: $canvasView)
             }
             .environmentObject(writingModel)
-        }
     }
 
+}
+
+@available(iOS 17.5, *)
+struct WritingView_17_5: View {
+    @Environment(\.undoManager) private var undoManager
+    // iOS 17.5
+    @Environment(\.preferredPencilDoubleTapAction) private var preferredAction
+    @StateObject var writingModel: WritingModel = WritingModel()
+    @State var canvasView: PKCanvasView = .init()
+    
+    var body: some View {
+        ZStack(alignment: .bottom) {
+            ScrollView {
+                ZStack {
+                    NoteBookView(spacing: 80, lines: 20)
+                    HandWritingCanvas(canvasView: $canvasView)
+                }
+            }
+            // iOS 17.5
+            .onPencilDoubleTap { value in
+
+            }
+            .onPencilSqueeze { phase in
+                
+            }
+            // The toolbar
+            ToolBarComponent(canvasView: $canvasView)
+        }
+        .environmentObject(writingModel)
+    }
 }
 
 #Preview {

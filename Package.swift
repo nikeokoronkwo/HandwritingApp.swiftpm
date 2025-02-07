@@ -36,7 +36,7 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(url: "https://github.com/swiftlang/swift-testing.git", "6.0.3"..<"7.0.0")
+        .package(url: "https://github.com/swiftlang/swift-testing.git", .branch("main"))
     ],
     targets: [
         .executableTarget(

@@ -1,3 +1,5 @@
 # Temporary directory
 _temp
 
+# Ignore resolved file
+Package.resolved

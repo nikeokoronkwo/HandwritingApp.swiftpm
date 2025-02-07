@@ -35,9 +35,15 @@ let package = Package(
             appCategory: .education
         )
     ],
+    dependencies: [
+        .package(url: "https://github.com/swiftlang/swift-testing.git", "6.0.3"..<"7.0.0")
+    ],
     targets: [
         .executableTarget(
             name: "AppModule",
+            dependencies: [
+                .product(name: "Testing", package: "swift-testing")
+            ],
             path: "."
         )
     ],

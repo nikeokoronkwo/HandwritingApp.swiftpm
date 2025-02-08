@@ -13,7 +13,7 @@ import PencilKit
 ///
 /// At the moment it is a minimal wrapper with support only for necessary tools needed for this handwriting application
 struct HandWritingCanvas: UIViewRepresentable {
-    @EnvironmentObject var writingModel: WritingModel
+    @EnvironmentObject var writingModel: WritingManager
     @Binding var canvasView: PKCanvasView
 
     private func updateCanvasTool() {

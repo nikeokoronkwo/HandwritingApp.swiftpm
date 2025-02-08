@@ -14,7 +14,7 @@ import SwiftUI
 ///
 /// Any tool that will make use of writing in this app conforms to this protocol, as it provides the environment for the canvas and the
 protocol WritingCanvas: View {
-    var writingModel: WritingModel { get }
+    var writingModel: WritingManager { get }
     var canvasView: PKCanvasView { get }
 }
 
@@ -22,7 +22,7 @@ protocol WritingCanvas: View {
 
 struct WritingView: WritingCanvas {
     @Environment(\.undoManager) private var undoManager
-    @StateObject var writingModel: WritingModel = WritingModel()
+    @StateObject var writingModel: WritingManager = WritingManager()
     @State var canvasView = PKCanvasView()
 
     var body: some View {
@@ -50,7 +50,7 @@ struct WritingView_17_5: View {
     @Environment(\.undoManager) private var undoManager
     // iOS 17.5
     @Environment(\.preferredPencilDoubleTapAction) private var preferredAction
-    @StateObject var writingModel: WritingModel = WritingModel()
+    @StateObject var writingModel: WritingManager = WritingManager()
     @State var canvasView: PKCanvasView = .init()
     
     var body: some View {

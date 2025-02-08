@@ -52,7 +52,7 @@ extension ToggleStyle where Self == HWToggleStyle {
     static var hw: HWToggleStyle { .init() }
 }
 
-extension WritingModel {
+extension WritingManager {
     var toggleIsOn: Bool {
         get {
             selectedTool == .pen
@@ -81,7 +81,7 @@ extension WritingModel {
 }
 
 struct ToolBarComponent: View {
-    @EnvironmentObject var writingModel: WritingModel
+    @EnvironmentObject var writingModel: WritingManager
     @Binding var canvasView: PKCanvasView
     
     private let itemSpacing: CGFloat = 40.0

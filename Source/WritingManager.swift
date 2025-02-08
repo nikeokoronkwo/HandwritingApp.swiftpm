@@ -1,5 +1,5 @@
 //
-//  WritingModel.swift
+//  WritingManager.swift
 //  HandWriting
 //
 //  Created by Nikechukwu Okoronkwo on 02/02/2025.
@@ -11,7 +11,7 @@ import SwiftUI
 /// A model object for working with the tools needed for writing
 ///
 /// This object is an ``ObservableObject`` with variables that are relating to the tools that are to be monitored
-class WritingModel: ObservableObject {
+class WritingManager: ObservableObject {
     
     /// ## TOOLS
     /// - Pen vs Eraser

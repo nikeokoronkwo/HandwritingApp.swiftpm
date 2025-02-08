@@ -6,12 +6,21 @@
 //
 
 import SwiftUI
+import SwiftData
+
+fileprivate func predicate() -> Predicate<WritingModel> {
+    return #Predicate<WritingModel> { model in
+        !model.core
+    }
+}
 
 /// # Practice View
 /// This is the practice view, where users can practice their handwriting skills by making their own special tests and others via a dialog
 ///
 ///
 struct PracticeView: View {
+    @Query(filter: predicate(), sort: \.updated) var practiceModels: [WritingModel]
+    
     /// The size for image items (the square shown at the leading side of each practice item)
     private let gridItemSize: CGFloat = 100
 

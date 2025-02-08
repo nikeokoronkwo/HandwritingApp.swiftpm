@@ -11,15 +11,15 @@ struct Levels: Codable {
     enum LevelType: RawRepresentable, Codable {
         init?(rawValue: String) {
             switch rawValue {
-                case "word":
-                    self = .word
-                case "img":
-                    self = .img
+            case "word":
+                self = .word
+            case "img":
+                self = .img
             default:
                 return nil
             }
         }
-        
+
         var rawValue: String {
             switch self {
             case .word:
@@ -28,18 +28,18 @@ struct Levels: Codable {
                 return "img"
             }
         }
-        
+
         typealias RawValue = String
-        
+
         case word
         case img
     }
-    
+
     struct LevelInfo: Codable {
         var type: LevelType
         var value: String
     }
-    
+
     var index: Int
     var name: String
     var isCompleted: Bool?

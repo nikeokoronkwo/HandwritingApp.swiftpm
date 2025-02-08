@@ -1,33 +1,36 @@
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 /// The application entrypoint
 @main
 struct MyApp: App {
     /// Whether the user has been onboarded
     @AppStorage("isOnboarded") var userIsOnboarded: Bool = false
-    
+
     var modelContainer: ModelContainer = {
-//        do {
-            let schemas = Schema([
-                Workbook.self,
-                RealtimeWritingModel.self,
-                WritingModel.self
-            ])
-            
-            let workBookConfiguration = ModelConfiguration("workbooks",
-                                                           schema: Schema([Workbook.self]))
-            
-            let writingConfiguration = ModelConfiguration("writing",
-                                                          schema: Schema([RealtimeWritingModel.self, WritingModel.self]))
-            
-            return try! ModelContainer(for: schemas, configurations: [workBookConfiguration, writingConfiguration])
-//        }
-//        catch {
-//            return try! ModelContainer(for: Workbook.self,
-//                                   RealtimeWritingModel.self,
-//                                   WritingData.self)
-//        }
+        //        do {
+        let schemas = Schema([
+            Workbook.self,
+            RealtimeWritingModel.self,
+            WritingModel.self,
+        ])
+
+        let workBookConfiguration = ModelConfiguration(
+            "workbooks",
+            schema: Schema([Workbook.self]))
+
+        let writingConfiguration = ModelConfiguration(
+            "writing",
+            schema: Schema([RealtimeWritingModel.self, WritingModel.self]))
+
+        return try! ModelContainer(
+            for: schemas, configurations: [workBookConfiguration, writingConfiguration])
+        //        }
+        //        catch {
+        //            return try! ModelContainer(for: Workbook.self,
+        //                                   RealtimeWritingModel.self,
+        //                                   WritingData.self)
+        //        }
     }()
 
     /// The Main View one goes to once the application is opened
@@ -42,10 +45,10 @@ struct MyApp: App {
                     .modelContainer(for: [
                         Workbook.self,
                         RealtimeWritingModel.self,
-                        WritingModel.self
+                        WritingModel.self,
                     ])
-//                    .modelContainer(modelContainer)
-                
+                //                    .modelContainer(modelContainer)
+
             }
         }
     }

@@ -5,10 +5,10 @@
 //  Created by Nikechukwu Okoronkwo on 02/02/2025.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
-fileprivate func learnPredicate() -> Predicate<WritingModel> {
+private func learnPredicate() -> Predicate<WritingModel> {
     return #Predicate<WritingModel> { model in
         model.core
     }
@@ -16,10 +16,10 @@ fileprivate func learnPredicate() -> Predicate<WritingModel> {
 
 struct LevelsView: View {
     @Query(filter: learnPredicate(), sort: \.updated) var levelInfo: [WritingModel]
-    
+
     /// Search Term for searching up a workbook
     @State private var searchTerm: String = ""
-    
+
     var type: LevelType
 
     private let gridVSpacing: CGFloat = 40

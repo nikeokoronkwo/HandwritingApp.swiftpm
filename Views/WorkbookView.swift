@@ -5,8 +5,8 @@
 //  Created by Nikechukwu Okoronkwo on 01/02/2025.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 /// # Workbook View
 /// This is the workbook view, where users can make "books" which basically represents free space for users to practice their writing skills on an empty canvas and write. They get to use the same tools they previously used for learning here.
@@ -15,7 +15,7 @@ import SwiftData
 struct WorkbookView: View {
     /// The workbooks
     @Query var workbooks: [Workbook]
-    
+
     /// Search Term for searching up a workbook
     @State private var searchTerm: String = ""
 
@@ -48,7 +48,7 @@ struct WorkbookView: View {
                         }
                     }
                 #else
-                    
+
                 #endif
             }
             .padding()

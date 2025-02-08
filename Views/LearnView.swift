@@ -11,7 +11,7 @@ struct TriangularLayout: Layout {
     func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
         proposal.replacingUnspecifiedDimensions()
     }
-    
+
     func placeSubviews(
         in bounds: CGRect,
         proposal: ProposedViewSize,
@@ -21,17 +21,16 @@ struct TriangularLayout: Layout {
         // Place the views within the bounds.
         let radius = min(bounds.size.width, bounds.size.height) / 3.0
 
-
         guard subviews.count == 3 else { return }
-        
+
         let angle = Angle.degrees(360.0 / Double(subviews.count)).radians
 
         for (index, subview) in subviews.enumerated() {
             var point = CGPoint(x: 0, y: -radius)
-                .applying(CGAffineTransform(
-                    rotationAngle: -angle * Double(index)))
+                .applying(
+                    CGAffineTransform(
+                        rotationAngle: -angle * Double(index)))
 
-            
             point.x += bounds.midX
             point.y += bounds.midY
 
@@ -39,7 +38,7 @@ struct TriangularLayout: Layout {
             subview.place(at: point, anchor: .center, proposal: .unspecified)
         }
     }
-    
+
 }
 
 // TODO: Add support for "continue from where you stopped" type shi
@@ -57,11 +56,17 @@ enum LevelType {
 
 struct LearnView: View {
     private var options: [LearnOption] = [
-        LearnOption(name: "Foundations", description: "Learn the fundamentals of good handwriting", levelType: .basic),
-        LearnOption(name: "Advanced", description: "Get serious and write practically", levelType: .advanced),
-        LearnOption(name: "Custom", description: "Try out something new, with no guides", levelType: .expert)
+        LearnOption(
+            name: "Foundations", description: "Learn the fundamentals of good handwriting",
+            levelType: .basic),
+        LearnOption(
+            name: "Advanced", description: "Get serious and write practically", levelType: .advanced
+        ),
+        LearnOption(
+            name: "Custom", description: "Try out something new, with no guides", levelType: .expert
+        ),
     ]
-    
+
     var body: some View {
         TriangularLayout {
             ForEach(options, id: \.name) { opt in

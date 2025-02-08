@@ -14,7 +14,7 @@ struct DashboardView: View {
 
     /// The selected app activity category
     @State private var appActivity: AppActivity?
-    
+
     /// Whether to open statistics
     @State private var openStatsSheet: Bool = false
 
@@ -37,7 +37,7 @@ struct DashboardView: View {
             }
             .navigationTitle("Explore")
         } detail: {
-            
+
             Group {
                 if let appActivity {
                     /// Select given activity to do
@@ -63,15 +63,15 @@ struct DashboardView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-#if targetEnvironment(simulator)
-                    Button {
-                        openStatsSheet = true
-                    } label: {
-                        Label("Stats", systemImage: "chart.bar")
-                    }
-#else
-                    settingsMenu
-#endif
+                    #if targetEnvironment(simulator)
+                        Button {
+                            openStatsSheet = true
+                        } label: {
+                            Label("Stats", systemImage: "chart.bar")
+                        }
+                    #else
+                        settingsMenu
+                    #endif
                 }
             }
             .sheet(isPresented: $openStatsSheet) {

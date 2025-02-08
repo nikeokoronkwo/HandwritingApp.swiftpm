@@ -14,6 +14,15 @@ fileprivate func predicate() -> Predicate<WritingModel> {
     }
 }
 
+func formatDate(_ date: Date) -> String {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateStyle = .medium
+    dateFormatter.timeStyle = .none
+    dateFormatter.locale = Locale(identifier: "en_US")
+    
+    return dateFormatter.string(from: date)
+}
+
 /// # Practice View
 /// This is the practice view, where users can practice their handwriting skills by making their own special tests and others via a dialog
 ///
@@ -42,34 +51,37 @@ struct PracticeView: View {
                 }
             }
             List {
-                #if targetEnvironment(simulator)
-                    ForEach(0..<100) { _ in
-                        NavigationLink {
-                            Text("A beast awakens from the shadows, to claim its prey")
-                        } label: {
-                            HStack(spacing: 20) {
-                                RoundedRectangle(cornerRadius: 8)
-                                    // TODO: Model Placeholder Reference
-                                    .fill(Color.white)
-                                    .shadow(radius: 2.5)
-                                    .frame(width: gridItemSize, height: gridItemSize)
-                                VStack(alignment: .leading) {
-                                    Text("Placeholder")
-                                    Text("Placeholder Date")
-                                        .font(.caption)
-                                        .foregroundColor(.secondary)
-                                }
+//                #if targetEnvironment(simulator)
+//                    
+//                #else
+//                
+//                #endif
+                ForEach(practiceModels) { model in
+                    NavigationLink {
+                        Text("A beast awakens from the shadows, to claim its prey")
+                    } label: {
+                        HStack(spacing: 20) {
+                            RoundedRectangle(cornerRadius: 8)
+                                // TODO: Model Placeholder Reference
+                                .fill(Color.white)
+                                .shadow(radius: 2.5)
+                                .frame(width: gridItemSize, height: gridItemSize)
+                            VStack(alignment: .leading) {
+                                Text(model.title ?? model.data)
+                                Text(formatDate( model.updated))
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
                             }
                         }
+                    }
 
-                    }
-                    .onDelete { indexSet in
-                        // remove
-                    }
-                    .onMove { indexSet, to in
-                        // move
-                    }
-                #endif
+                }
+                .onDelete { indexSet in
+                    // remove
+                }
+                .onMove { indexSet, to in
+                    // move
+                }
 
             }
             // TODO: Implement Searching
@@ -103,4 +115,35 @@ struct PracticeView: View {
 
 #Preview("View in Dashboard") {
     DashboardView(appActivity: .practice)
+}
+
+struct PracticePreviewView :View {
+    var container: ModelContainer = {
+        let randomWords = [
+            "ballotelli",
+            "many",
+            "My name is Jason",
+            "desperate",
+            "The man is running",
+            "Someone's Watching"
+        ]
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+        let container = try! ModelContainer(for: WritingModel.self, configurations: config)
+
+        for i in 1..<10 {
+            let model = WritingModel(updated: Date(), score: Float.random(in: 1...100), core: false, data: randomWords.randomElement()!, result: nil)
+            container.mainContext.insert(model)
+        }
+        
+        return container
+    }()
+    
+    var body: some View {
+        PracticeView()
+            .modelContainer(container)
+    }
+}
+
+#Preview("Preview in SwiftData") {
+    PracticePreviewView()
 }

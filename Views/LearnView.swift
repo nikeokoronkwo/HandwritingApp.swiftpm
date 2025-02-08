@@ -46,20 +46,28 @@ struct TriangularLayout: Layout {
 struct LearnOption {
     var name: String
     var description: String
+    var levelType: LevelType
+}
+
+enum LevelType {
+    case basic
+    case advanced
+    case expert
 }
 
 struct LearnView: View {
     private var options: [LearnOption] = [
-        LearnOption(name: "Foundations", description: "Learn the fundamentals of good handwriting"),
-        LearnOption(name: "Advanced", description: "Get serious and write practically"),
-        LearnOption(name: "Custom", description: "Try out something new, with no guides")
+        LearnOption(name: "Foundations", description: "Learn the fundamentals of good handwriting", levelType: .basic),
+        LearnOption(name: "Advanced", description: "Get serious and write practically", levelType: .advanced),
+        LearnOption(name: "Custom", description: "Try out something new, with no guides", levelType: .expert)
     ]
+    
     var body: some View {
         TriangularLayout {
             ForEach(options, id: \.name) { opt in
                 NavigationLink {
                     // TODO: Levels needs to be passed data somehow
-                    LevelsView()
+                    LevelsView(type: opt.levelType)
                 } label: {
                     VStack {
                         // TODO: Overlay incase man wanna continue from where he stopped

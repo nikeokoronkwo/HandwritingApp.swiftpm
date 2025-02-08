@@ -22,8 +22,11 @@ class WritingModel {
     /// Whether this references a core level
     var core: Bool
     
-    /// The data used for the given level
+    /// The data used for the given level, as text
     var data: String
+    
+    /// The title for a given level, if set
+    var title: String?
     
     /// The user's drawing stored externally but referenced here
     @Attribute(.externalStorage) var result: Data?

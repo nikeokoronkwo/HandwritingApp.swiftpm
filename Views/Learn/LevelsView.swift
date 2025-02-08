@@ -8,12 +8,6 @@
 import SwiftUI
 import SwiftData
 
-enum LevelType {
-    case basic
-    case advanced
-    case expert
-}
-
 fileprivate func learnPredicate() -> Predicate<WritingModel> {
     return #Predicate<WritingModel> { model in
         model.core
@@ -25,6 +19,8 @@ struct LevelsView: View {
     
     /// Search Term for searching up a workbook
     @State private var searchTerm: String = ""
+    
+    var type: LevelType
 
     private let gridVSpacing: CGFloat = 40
 
@@ -70,5 +66,5 @@ struct LevelsView: View {
 }
 
 #Preview {
-    LevelsView()
+    LevelsView(type: .advanced)
 }

@@ -1,11 +1,16 @@
 import SwiftData
 import SwiftUI
 
+
+
 /// The application entrypoint
 @main
 struct MyApp: App {
     /// Whether the user has been onboarded
     @AppStorage("isOnboarded") var userIsOnboarded: Bool = false
+    @StateObject
+    var model: LevelsModel = .init()
+    
 
     var modelContainer: ModelContainer = {
         //        do {
@@ -38,21 +43,24 @@ struct MyApp: App {
     /// In the moment the app is opened, the user is either onboarded, if `userIsOnboarded` is false (meaning that the user is **not** onboarded), or just given options of whether to begin practicing or not
     var body: some Scene {
         WindowGroup {
-            if !userIsOnboarded {
-                OnboardingView()
-            } else {
-                DashboardView()
-                // TODO: Investigate multiple model containers/contexts
-                    .modelContainer(for: [
-                        Workbook.self,
-                        RealtimeWritingModel.self,
-                        WritingModel.self,
-                    ])
-                    .task {
-                        await loadAssets()
-                    }
-                //                    .modelContainer(modelContainer)
+            Group {
+                if !userIsOnboarded {
+                    OnboardingView()
+                } else {
+                    DashboardView()
+                    // TODO: Investigate multiple model containers/contexts
+                        .modelContainer(for: [
+                            Workbook.self,
+                            RealtimeWritingModel.self,
+                            WritingModel.self,
+                        ])
+                        .environmentObject(model)
+//                      .modelContainer(modelContainer)
 
+                }
+            }
+            .task {
+                await loadAssets()
             }
         }
     }
@@ -95,17 +103,35 @@ struct MyApp: App {
                 // throw error
             }
             
-            let assetsDataArray = try assetsBundleUrls.map { url in
-                return try Data(contentsOf: url)
+            let assetsDataDict = try assetsBundleUrls.reduce(into: [String: Data]()) { partialResult, url in
+                partialResult[url.lastPathComponent] = try Data(contentsOf: url)
             }
             
-            try levelData.write(to: documentsUrl, atomically: true, encoding: .utf8)
+            try levelData.write(to: documentsUrl.appending(path: "levels.json"), atomically: true, encoding: .utf8)
             
-            try assetsDataArray.forEach { data in
-                try data.write(to: documentsUrl.appending(path: "assets"), options: [.atomic, .completeFileProtection])
+            try assetsDataDict.forEach { aDictElement in
+                try aDictElement.value.write(to: documentsUrl.appending(path: "assets").appending(path: aDictElement.key), options: [.atomic, .completeFileProtection])
             }
+            
+//            model = LevelsModel(
+//                jsonPath: documentsUrl.appending(path: "levels.json"),
+//                assetPath: [:]
+//            )
+            await MainActor.run {
+                model.jsonPath = documentsUrl.appending(path: "levels.json")
+                assetsDataDict.forEach { el in
+                    model.assetPath[el.key] = documentsUrl.appending(path: "assets").appending(path: el.key)
+                }
+                
+                debugPrint("+++++++++++++++++")
+                debugPrint(model)
+                debugPrint(model.assetPath)
+                debugPrint(model.jsonPath)
+            }
+            
         } catch {
             // handle errors
+            debugPrint(error)
             return
         }
     }

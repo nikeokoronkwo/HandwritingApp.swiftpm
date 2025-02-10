@@ -20,15 +20,9 @@ enum LevelType {
     case expert
 }
 
-class LearnModel: ObservableObject {
-    @Published var assets: LevelsAsset
-    
-    init(assets: LevelsAsset) {
-        self.assets = assets
-    }
-}
-
 struct LearnView: View {
+    @EnvironmentObject var levelModel: LevelsModel
+    
     private var options: [LearnOption] = [
         LearnOption(
             name: "Foundations", description: "Learn the fundamentals of good handwriting",
@@ -40,8 +34,6 @@ struct LearnView: View {
             name: "Custom", description: "Try out something new, with no guides", levelType: .expert
         ),
     ]
-    
-    @StateObject var learnModel: LearnModel = .init(assets: .init(basic: [], advanced: [], expert: []))
 
     var body: some View {
         TriangularLayout {
@@ -67,20 +59,11 @@ struct LearnView: View {
 
             }
         }
-        .task {
-            
-        }
-    }
-    
-    nonisolated func fetchData() async {
-        // fetch learn data in background
-        let documentsUrl = URL.documentsDirectory.appending(path: "levels")
-        
-        // save learn data as env object
-        // learnModel.assets =
     }
 }
 
 #Preview {
+    let demoLevelModel = LevelsModel(assetPath: [:])
     LearnView()
+        .environmentObject(demoLevelModel)
 }

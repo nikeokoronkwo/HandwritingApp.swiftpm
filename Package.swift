@@ -35,15 +35,9 @@ let package = Package(
             appCategory: .education
         )
     ],
-    dependencies: [
-        .package(url: "https://github.com/swiftlang/swift-testing.git", .branch("main"))
-    ],
     targets: [
         .executableTarget(
             name: "AppModule",
-            dependencies: [
-                .product(name: "Testing", package: "swift-testing")
-            ],
             path: ".",
             resources: [
                 .process("Data/Assets")

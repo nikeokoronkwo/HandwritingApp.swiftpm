@@ -58,7 +58,7 @@ struct LevelsAsset: Codable {
 }
 
 // FIXME: Fix asset loading to handle error catching
-func loadAssets(url: URL) -> LevelsAsset {
-    let data = try! Data(contentsOf: url)
-    return try! JSONDecoder().decode(LevelsAsset.self, from: data)
+func loadAssets(url: URL) throws -> LevelsAsset  {
+    let data = try Data(contentsOf: url)
+    return try JSONDecoder().decode(LevelsAsset.self, from: data)
 }

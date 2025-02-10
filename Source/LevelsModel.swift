@@ -4,6 +4,7 @@
 //
 //  Created by Nikechukwu Okoronkwo on 09/02/2025.
 //
+import Foundation
 
 
 class
@@ -23,7 +24,7 @@ LevelsModel
     
     lazy var levelAssets: LevelsAsset? = {
         if let p = jsonPath {
-            return loadAssets(url: p)
+            return try? loadAssets(url: p)
         }
         // should throw error sha
         return nil

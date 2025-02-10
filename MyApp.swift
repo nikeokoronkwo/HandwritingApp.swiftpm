@@ -60,14 +60,13 @@ struct MyApp: App {
                 }
             }
             .task {
-                await loadAssets()
+                await getAssets()
             }
         }
     }
     
-    nonisolated func loadAssets() async {
+    nonisolated func getAssets() async {
         // get assets from bundle
-        debugPrint(Bundle.main.isLoaded)
         
         guard let levelsBundleUrl = Bundle.main.url(forResource: "levels", withExtension: "json") else {
             // error out
@@ -79,12 +78,8 @@ struct MyApp: App {
             return
         }
         
-        debugPrint(levelsBundleUrl)
-        
         // load to documents directory
         let documentsUrl = URL.documentsDirectory
-        
-        debugPrint(documentsUrl)
         
         do {
             guard let levelData = try? String(contentsOf: levelsBundleUrl) else {
@@ -97,11 +92,15 @@ struct MyApp: App {
                 return
             }
             
+            debugPrint(levelData)
+            debugPrint(levelDataAsJson)
+            
             if levelDataAsJson.advanced.count == 0 ||
                 levelDataAsJson.basic.count == 0 ||
                 levelDataAsJson.expert.count == 0 {
                 // throw error
             }
+            
             
             let assetsDataDict = try assetsBundleUrls.reduce(into: [String: Data]()) { partialResult, url in
                 partialResult[url.lastPathComponent] = try Data(contentsOf: url)
@@ -113,10 +112,8 @@ struct MyApp: App {
                 try aDictElement.value.write(to: documentsUrl.appending(path: "assets").appending(path: aDictElement.key), options: [.atomic, .completeFileProtection])
             }
             
-//            model = LevelsModel(
-//                jsonPath: documentsUrl.appending(path: "levels.json"),
-//                assetPath: [:]
-//            )
+            
+
             await MainActor.run {
                 model.jsonPath = documentsUrl.appending(path: "levels.json")
                 assetsDataDict.forEach { el in
@@ -132,6 +129,7 @@ struct MyApp: App {
         } catch {
             // handle errors
             debugPrint(error)
+            debugPrint("*****************")
             return
         }
     }

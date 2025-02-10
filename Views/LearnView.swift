@@ -7,40 +7,6 @@
 
 import SwiftUI
 
-struct TriangularLayout: Layout {
-    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
-        proposal.replacingUnspecifiedDimensions()
-    }
-
-    func placeSubviews(
-        in bounds: CGRect,
-        proposal: ProposedViewSize,
-        subviews: Subviews,
-        cache: inout Void
-    ) {
-        // Place the views within the bounds.
-        let radius = min(bounds.size.width, bounds.size.height) / 3.0
-
-        guard subviews.count == 3 else { return }
-
-        let angle = Angle.degrees(360.0 / Double(subviews.count)).radians
-
-        for (index, subview) in subviews.enumerated() {
-            var point = CGPoint(x: 0, y: -radius)
-                .applying(
-                    CGAffineTransform(
-                        rotationAngle: -angle * Double(index)))
-
-            point.x += bounds.midX
-            point.y += bounds.midY
-
-            // Place the subview.
-            subview.place(at: point, anchor: .center, proposal: .unspecified)
-        }
-    }
-
-}
-
 // TODO: Add support for "continue from where you stopped" type shi
 struct LearnOption {
     var name: String
@@ -52,6 +18,14 @@ enum LevelType {
     case basic
     case advanced
     case expert
+}
+
+class LearnModel: ObservableObject {
+    @Published var assets: LevelsAsset
+    
+    init(assets: LevelsAsset) {
+        self.assets = assets
+    }
 }
 
 struct LearnView: View {
@@ -66,6 +40,8 @@ struct LearnView: View {
             name: "Custom", description: "Try out something new, with no guides", levelType: .expert
         ),
     ]
+    
+    @StateObject var learnModel: LearnModel = .init(assets: .init(basic: [], advanced: [], expert: []))
 
     var body: some View {
         TriangularLayout {
@@ -91,6 +67,17 @@ struct LearnView: View {
 
             }
         }
+        .task {
+            
+        }
+    }
+    
+    nonisolated func fetchData() async {
+        // fetch learn data in background
+        let documentsUrl = URL.documentsDirectory.appending(path: "levels")
+        
+        // save learn data as env object
+        // learnModel.assets =
     }
 }
 

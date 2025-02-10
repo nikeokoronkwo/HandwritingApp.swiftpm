@@ -21,8 +21,6 @@ struct WorkbookView: View {
 
     private let gridVSpacing: CGFloat = 40
 
-    private let gridItemSize: CGFloat = 220
-
     private var gridItems: [GridItem] {
         return [
             GridItem(.flexible(), spacing: nil, alignment: nil),
@@ -39,12 +37,13 @@ struct WorkbookView: View {
                 spacing: gridVSpacing
             ) {
                 #if targetEnvironment(simulator)
-                    ForEach(0..<12) { _ in
+                ForEach(workbooks, id: \.lastAccessed) { wb in
                         NavigationLink {
                             // TODO: Pass data down to handwriting view
-                            HandWritingView()
+//                            HandWritingView()
+                            EmptyView()
                         } label: {
-                            WorkbookItemView(size: gridItemSize)
+                            WorkbookItemView(book: wb)
                         }
                     }
                 #else
@@ -70,12 +69,9 @@ struct WorkbookView: View {
 
 struct WorkbookItemView: View {
     @Environment(\.colorScheme) var colorScheme
+    var book: Workbook
 
-    var size: CGFloat
-
-    init(size: CGFloat) {
-        self.size = size
-    }
+    private let size: CGFloat = 220
 
     var body: some View {
         RoundedRectangle(cornerRadius: 15)
@@ -100,9 +96,9 @@ struct WorkbookItemView: View {
                     .overlay(alignment: .topLeading) {
                         // TODO: Model Placeholder Reference
                         VStack(alignment: .leading) {
-                            Text("**Placeholder Text**")
+                            Text("**\(book.name)**")
                                 .foregroundStyle(Color.primary)
-                            Text("Placeholder Text")
+                            Text(book.lastAccessed.description)
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }

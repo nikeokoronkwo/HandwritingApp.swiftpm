@@ -31,9 +31,6 @@ struct WritingView: WritingCanvas {
                 }
             }
             // iOS 17.5
-            //                .onPencilDoubleTap { value in
-            //
-            //                }
             // The toolbar
             ToolBarComponent(canvasView: $canvasView)
         }
@@ -43,7 +40,7 @@ struct WritingView: WritingCanvas {
 }
 
 @available(iOS 17.5, *)
-struct WritingView_17_5: View {
+struct WritingView_17_5: WritingCanvas {
     @Environment(\.undoManager) private var undoManager
     // iOS 17.5
     @Environment(\.preferredPencilDoubleTapAction) private var preferredAction
@@ -74,4 +71,12 @@ struct WritingView_17_5: View {
 
 #Preview {
     WritingView()
+}
+
+#Preview("iOS 17.5") {
+    if #available(iOS 17.5, *) {
+        WritingView_17_5()
+    } else {
+        Text("Unavailable")
+    }
 }

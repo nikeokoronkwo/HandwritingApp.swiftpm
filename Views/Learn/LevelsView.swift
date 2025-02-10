@@ -45,7 +45,7 @@ struct LevelsView: View {
                     ForEach(0..<12) { index in
                         NavigationLink {
                             // TODO: Pass data down to handwriting view
-                            HandWritingView()
+//                            HandWritingView()
                         } label: {
                             VStack {
                                 RoundedRectangle(cornerRadius: 10)

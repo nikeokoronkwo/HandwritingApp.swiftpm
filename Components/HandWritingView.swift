@@ -10,17 +10,56 @@ import SwiftUI
 struct HandWritingView: View {
     /// The writing model for the given view, if any
     /// Used for populating existing data
-    @Binding var model: WritingModel?
-
-    init(model: Binding<WritingModel?>? = nil) {
-        self._model = model ?? Binding.constant(nil)
+    @Bindable var model: WritingModel
+    
+    init(model: WritingModel) {
+        self.model = model
+        self.model.updated = Date()
     }
+    
+    @Environment(\.presentationMode) private var presentationMode
 
     var body: some View {
-        Text( /*@START_MENU_TOKEN@*/"Hello, World!" /*@END_MENU_TOKEN@*/)
+        ZStack {
+            Button {
+                presentationMode.wrappedValue.dismiss()
+            } label: {
+                Label {
+                    Text("Return")
+                } icon: {
+                    Image(systemName: "arrow.left")
+                }
+                .padding()
+            }
+        }
     }
 }
 
-#Preview {
-    HandWritingView()
+struct HandWritingCoreView: View {
+    /// The writing model for the given view, if any
+    /// Used for populating existing data
+    @Bindable var model: WritingModel
+    
+    
+    @Environment(\.presentationMode) private var presentationMode
+    
+    var body: some View {
+        ZStack {
+            Button {
+                presentationMode.wrappedValue.dismiss()
+            } label: {
+                Label {
+                    Text("Return")
+                } icon: {
+                    Image(systemName: "arrow.left")
+                }
+                .padding()
+            }
+        }
+    }
+}
+
+#Preview("Practice HW View") {
+    let model = WritingModel(updated: Date(), score: 30, core: false, data: "my hands")
+    HandWritingView(model: model)
 }

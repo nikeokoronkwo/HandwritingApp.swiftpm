@@ -42,14 +42,71 @@ struct MyApp: App {
                 OnboardingView()
             } else {
                 DashboardView()
+                // TODO: Investigate multiple model containers/contexts
                     .modelContainer(for: [
                         Workbook.self,
                         RealtimeWritingModel.self,
                         WritingModel.self,
                     ])
+                    .task {
+                        await loadAssets()
+                    }
                 //                    .modelContainer(modelContainer)
 
             }
+        }
+    }
+    
+    nonisolated func loadAssets() async {
+        // get assets from bundle
+        debugPrint(Bundle.main.isLoaded)
+        
+        guard let levelsBundleUrl = Bundle.main.url(forResource: "levels", withExtension: "json") else {
+            // error out
+            return
+        }
+        
+        guard let assetsBundleUrls = Bundle.main.urls(forResourcesWithExtension: "png", subdirectory: ".") else {
+            // error out
+            return
+        }
+        
+        debugPrint(levelsBundleUrl)
+        
+        // load to documents directory
+        let documentsUrl = URL.documentsDirectory
+        
+        debugPrint(documentsUrl)
+        
+        do {
+            guard let levelData = try? String(contentsOf: levelsBundleUrl) else {
+                // throw error
+                return
+            }
+            
+            guard let levelDataAsJson = try? JSONDecoder().decode(LevelsAsset.self, from: levelData.data(using: .utf8)!) else {
+                // throw error
+                return
+            }
+            
+            if levelDataAsJson.advanced.count == 0 ||
+                levelDataAsJson.basic.count == 0 ||
+                levelDataAsJson.expert.count == 0 {
+                // throw error
+            }
+            
+            let assetsDataArray = try assetsBundleUrls.map { url in
+                return try Data(contentsOf: url)
+            }
+            
+            try levelData.write(to: documentsUrl, atomically: true, encoding: .utf8)
+            
+            try assetsDataArray.forEach { data in
+                try data.write(to: documentsUrl.appending(path: "assets"), options: [.atomic, .completeFileProtection])
+            }
+        } catch {
+            // handle errors
+            return
         }
     }
 }

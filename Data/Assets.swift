@@ -4,10 +4,11 @@
 //
 //  Created by Nikechukwu Okoronkwo on 07/02/2025.
 //
+import Foundation
 
 /// # Levels Type
 /// This type is used for declaring a level in swift
-struct Levels: Codable {
+struct Level: Codable {
     enum LevelType: RawRepresentable, Codable {
         init?(rawValue: String) {
             switch rawValue {
@@ -47,9 +48,17 @@ struct Levels: Codable {
     var info: LevelInfo
 }
 
+typealias Levels = [Level]
+
 /// A data type to represent the JSON file used for initialising the levels for the application when initially installed
 struct LevelsAsset: Codable {
-    var basic: [Levels]
-    var advanced: [Levels]
-    var expert: [Levels]
+    var basic: Levels
+    var advanced: Levels
+    var expert: Levels
+}
+
+// FIXME: Fix asset loading to handle error catching
+func loadAssets(url: URL) -> LevelsAsset {
+    let data = try! Data(contentsOf: url)
+    return try! JSONDecoder().decode(LevelsAsset.self, from: data)
 }

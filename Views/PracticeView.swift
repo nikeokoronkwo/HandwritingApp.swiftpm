@@ -28,14 +28,18 @@ func formatDate(_ date: Date) -> String {
 ///
 ///
 struct PracticeView: View {
-    @Query(filter: predicate(), sort: \.updated) var practiceModels: [WritingModel]
+    @Environment(\.modelContext) private var modelContext
+    @Query(filter: predicate(), sort: \.updated, order: .reverse) var practiceModels: [WritingModel]
 
     /// The size for image items (the square shown at the leading side of each practice item)
     private let gridItemSize: CGFloat = 100
 
     /// State variable that displays an alert for creating a new practice
     @State private var showNewPracticeAlert = false
-    @State private var openPractice = false
+    
+    @State private var newPractice = false
+    @State private var practice = false
+    @State private var model: WritingModel?
 
     /// Search Term for searching up
     @State private var searchTerm: String = ""
@@ -44,13 +48,10 @@ struct PracticeView: View {
     @State private var newPracticeName: String = ""
 
     var body: some View {
-        // using if loop to prevent external toolbar rendering twice
-
+//        // using if loop to prevent external toolbar rendering twice
         List {
-            ForEach(practiceModels) { model in
-                NavigationLink {
-                    Text("A beast awakens from the shadows, to claim its prey")
-                } label: {
+            ForEach(practiceModels) { m in
+                NavigationLink(value: m) {
                     HStack(spacing: 20) {
                         RoundedRectangle(cornerRadius: 8)
                             // TODO: Model Placeholder Reference
@@ -58,14 +59,13 @@ struct PracticeView: View {
                             .shadow(radius: 2.5)
                             .frame(width: gridItemSize, height: gridItemSize)
                         VStack(alignment: .leading) {
-                            Text(model.title ?? model.data)
-                            Text(formatDate(model.updated))
+                            Text(m.title ?? m.data)
+                            Text(formatDate(m.updated))
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
                     }
                 }
-
             }
             .onDelete { indexSet in
                 // remove
@@ -88,8 +88,8 @@ struct PracticeView: View {
                 .alert("New Practice", isPresented: $showNewPracticeAlert) {
                     TextField("Enter Sentence", text: $newPracticeName)
                     Button("Cancel", role: .cancel, action: {})
-                    Button("OK") {
-                        openPractice = true
+                    NavigationLink(value: newPracticeName) {
+                        Text("OK")
                     }
                 } message: {
                     Text("Create a new practice playground.")
@@ -97,18 +97,28 @@ struct PracticeView: View {
             }
         })
         .padding()
+        .navigationDestination(for: WritingModel.self) { m in
+//            m.updated = Date()
+            HandWritingView(model: m)
+        }
+        .navigationDestination(for: String.self) { title in
+            let newModel = WritingModel(updated: Date(), score: 0, core: false, data: title)
+            
+            HandWritingView(model: newModel)
+        }
+//        // TODO: Implement full screen cover for all features
+        
     }
 }
 
-#Preview {
-    PracticeView()
-}
+/// Demo Container used for Pr
+struct ModelViewContainer<Content: View>: View {
+    let content: Content
 
-#Preview("View in Dashboard") {
-    DashboardView(appActivity: .practice)
-}
-
-struct PracticePreviewView: View {
+    init(@ViewBuilder _ content: () -> Content) {
+        self.content = content()
+    }
+    
     var container: ModelContainer = {
         let randomWords = [
             "ballotelli",
@@ -133,11 +143,27 @@ struct PracticePreviewView: View {
     }()
 
     var body: some View {
-        PracticeView()
+        content
             .modelContainer(container)
     }
 }
 
-#Preview("Preview in SwiftData") {
-    PracticePreviewView()
+#Preview {
+    PracticeView()
+}
+
+#Preview("View in Dashboard") {
+    DashboardView(appActivity: .practice)
+}
+
+#Preview("Preview Practice with SwiftData") {
+    ModelViewContainer {
+        PracticeView()
+    }
+}
+
+#Preview("Preview Dashboard with SwiftData") {
+    ModelViewContainer {
+        DashboardView(appActivity: .practice)
+    }
 }

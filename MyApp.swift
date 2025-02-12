@@ -7,9 +7,8 @@ import SwiftUI
 @main
 struct MyApp: App {
     /// Whether the user has been onboarded
-    @AppStorage("isOnboarded") var userIsOnboarded: Bool = false
-    @StateObject
-    var model: LevelsModel = .init()
+    @AppStorage("isOnboarded") var userIsOnboarded: Bool = true
+    @State private var model: LevelsModel = .init()
     
 
     var modelContainer: ModelContainer = {
@@ -54,7 +53,7 @@ struct MyApp: App {
                             RealtimeWritingModel.self,
                             WritingModel.self,
                         ])
-                        .environmentObject(model)
+                        .environment(\.levelModel, model)
 //                      .modelContainer(modelContainer)
 
                 }
@@ -108,7 +107,12 @@ struct MyApp: App {
             
             try levelData.write(to: documentsUrl.appending(path: "levels.json"), atomically: true, encoding: .utf8)
             
+            var isDir: ObjCBool = true
+            
             try assetsDataDict.forEach { aDictElement in
+                if !FileManager.default.fileExists(atPath: documentsUrl.appending(path: "assets").absoluteString, isDirectory: &isDir) {
+                    try FileManager.default.createDirectory(at: documentsUrl.appending(path: "assets"), withIntermediateDirectories: true)
+                }
                 try aDictElement.value.write(to: documentsUrl.appending(path: "assets").appending(path: aDictElement.key), options: [.atomic, .completeFileProtection])
             }
             

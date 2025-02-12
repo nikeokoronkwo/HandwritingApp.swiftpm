@@ -57,6 +57,19 @@ struct LevelsAsset: Codable {
     var expert: Levels
 }
 
+extension LevelsAsset {
+    func toJson() throws -> String {
+        guard let json = String(
+            data: try JSONEncoder().encode(self),
+            encoding: .utf8
+        ) else {
+            // custom error
+            throw NSError()
+        }
+        return json
+    }
+}
+
 // FIXME: Fix asset loading to handle error catching
 func loadAssets(url: URL) throws -> LevelsAsset  {
     let data = try Data(contentsOf: url)

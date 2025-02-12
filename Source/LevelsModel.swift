@@ -4,40 +4,40 @@
 //
 //  Created by Nikechukwu Okoronkwo on 09/02/2025.
 //
-import Foundation
+import SwiftUI
 
 
-class
-//struct
+//class
+struct
 LevelsModel
-: ObservableObject
+//: ObservableObject
 {
-    @Published
+//    @Published
     var jsonPath: URL?
-    @Published
+//    @Published
     var assetPath: [String: URL]
     
     init(jsonPath: URL? = nil, assetPath: [String : URL] = [:]) {
         self.jsonPath = jsonPath
         self.assetPath = assetPath
+        
+        if let p = jsonPath {
+            self.levelAssets = try? loadAssets(url: p)
+        } else {
+            self.levelAssets = nil
+        }
     }
     
-    lazy var levelAssets: LevelsAsset? = {
-        if let p = jsonPath {
-            return try? loadAssets(url: p)
-        }
-        // should throw error sha
-        return nil
-    }()
+    var levelAssets: LevelsAsset?
 }
 
-//struct LevelModelKey: EnvironmentKey {
-//    static let defaultValue: LevelsModel? = nil
-//}
-//
-//extension EnvironmentValues {
-//    var levelModel: LevelsModel? {
-//        get { self[LevelModelKey.self] }
-//        set { self[LevelModelKey.self] = newValue }
-//    }
-//}
+struct LevelModelKey: EnvironmentKey {
+    static let defaultValue: LevelsModel? = nil
+}
+
+extension EnvironmentValues {
+    var levelModel: LevelsModel? {
+        get { self[LevelModelKey.self] }
+        set { self[LevelModelKey.self] = newValue }
+    }
+}

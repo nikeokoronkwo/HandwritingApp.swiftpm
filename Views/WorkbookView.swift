@@ -15,6 +15,7 @@ import SwiftUI
 struct WorkbookView: View {
     /// The workbooks
     @Query var workbooks: [Workbook]
+    @Environment(\.modelContext) private var modelContext
 
     /// Search Term for searching up a workbook
     @State private var searchTerm: String = ""
@@ -36,19 +37,11 @@ struct WorkbookView: View {
                 alignment: .center,
                 spacing: gridVSpacing
             ) {
-                #if targetEnvironment(simulator)
                 ForEach(workbooks, id: \.lastAccessed) { wb in
-                        NavigationLink {
-                            // TODO: Pass data down to handwriting view
-//                            HandWritingView()
-                            EmptyView()
-                        } label: {
-                            WorkbookItemView(book: wb)
-                        }
+                    NavigationLink(value: wb) {
+                        WorkbookItemView(book: wb)
                     }
-                #else
-
-                #endif
+                }
             }
             .padding()
         }
@@ -56,14 +49,20 @@ struct WorkbookView: View {
         .searchable(text: $searchTerm)
         .toolbar(content: {
             ToolbarItemGroup(placement: .topBarLeading) {
-                Button {
-                    // TODO: New Workbook
-                    // For more info see ``NoteBookView``
-                } label: {
-                    Image(systemName: "plus")
-                }
+//                NavigationLink(value: "Untitled") {
+//                    Image(systemName: "plus")
+//                }
             }
         })
+//        .navigationDestination(for: String.self) { newTitle in
+//            let wb = Workbook(name: newTitle, lastAccessed: Date())
+//            let _ = modelContext.insert(wb)
+//            
+//            WorkbookWritingView(workBook: wb)
+//        }
+        .navigationDestination(for: Workbook.self) { wb in
+            WorkbookWritingView(workBook: wb)
+        }
     }
 }
 
@@ -115,4 +114,21 @@ struct WorkbookItemView: View {
 
 #Preview("View in Dashboard") {
     DashboardView(appActivity: .workbook)
+}
+
+#Preview {
+    ModelViewContainer(items: {
+        let randomNotebooks = [
+            "my book",
+            "rando book",
+            "book 1",
+            "untitled",
+        ]
+        
+        return (1..<10).map { i in
+            return Workbook(name: randomNotebooks.randomElement()!, data: Data(), lastAccessed: Date(timeIntervalSinceNow: TimeInterval(Float.random(in: 0..<50.0))))
+        }
+    }()) {
+        DashboardView(appActivity: .workbook)
+    }
 }

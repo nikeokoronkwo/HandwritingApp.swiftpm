@@ -1,5 +1,5 @@
 //
-//  NoteBookView.swift
+//  NoteBookBackground.swift
 //  HandWriting
 //
 //  Created by Nikechukwu Okoronkwo on 02/02/2025.
@@ -8,7 +8,7 @@
 import SwiftUI
 
 /// Major view for being able to just write down
-struct NoteBookView: View {
+struct NoteBookBackground: View {
     var spacing: CGFloat
     var lines: Int
     let lineWidth: CGFloat = 2
@@ -40,5 +40,5 @@ struct NoteBookView: View {
 }
 
 #Preview {
-    NoteBookView(spacing: 30, lines: 10)
+    NoteBookBackground(spacing: 30, lines: 10)
 }

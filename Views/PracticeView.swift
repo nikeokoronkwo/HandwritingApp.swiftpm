@@ -111,42 +111,7 @@ struct PracticeView: View {
     }
 }
 
-/// Demo Container used for Pr
-struct ModelViewContainer<Content: View>: View {
-    let content: Content
 
-    init(@ViewBuilder _ content: () -> Content) {
-        self.content = content()
-    }
-    
-    var container: ModelContainer = {
-        let randomWords = [
-            "ballotelli",
-            "many",
-            "My name is Jason",
-            "desperate",
-            "The man is running",
-            "Someone's Watching",
-            "Placeholder",
-        ]
-        let config = ModelConfiguration(isStoredInMemoryOnly: true)
-        let container = try! ModelContainer(for: WritingModel.self, configurations: config)
-
-        for i in 1..<10 {
-            let model = WritingModel(
-                updated: Date(), score: Float.random(in: 1...100), core: false,
-                data: randomWords.randomElement()!, result: nil)
-            container.mainContext.insert(model)
-        }
-
-        return container
-    }()
-
-    var body: some View {
-        content
-            .modelContainer(container)
-    }
-}
 
 #Preview {
     PracticeView()
@@ -157,13 +122,43 @@ struct ModelViewContainer<Content: View>: View {
 }
 
 #Preview("Preview Practice with SwiftData") {
-    ModelViewContainer {
+    ModelViewContainer(items: {
+        let randomWords = [
+            "ballotelli",
+            "many",
+            "My name is Jason",
+            "desperate",
+            "The man is running",
+            "Someone's Watching",
+            "Placeholder",
+        ]
+        return (1..<10).map { i in
+            return WritingModel(
+                updated: Date(), score: Float.random(in: 1...100), core: false,
+                data: randomWords.randomElement()!, result: nil)
+        }
+    }(), {
         PracticeView()
-    }
+    })
 }
 
 #Preview("Preview Dashboard with SwiftData") {
-    ModelViewContainer {
+    ModelViewContainer(items: {
+        let randomWords = [
+            "ballotelli",
+            "many",
+            "My name is Jason",
+            "desperate",
+            "The man is running",
+            "Someone's Watching",
+            "Placeholder",
+        ]
+        return (1..<10).map { i in
+            return WritingModel(
+                updated: Date(), score: Float.random(in: 1...100), core: false,
+                data: randomWords.randomElement()!, result: nil)
+        }
+    }()) {
         DashboardView(appActivity: .practice)
     }
 }

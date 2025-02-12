@@ -14,10 +14,10 @@ import SwiftData
 class Workbook {
     var name: String
     @Attribute(.unique) var id: UUID = UUID()
-    @Attribute(.externalStorage) var data: Data
+    @Attribute(.externalStorage) var data: Data?
     var lastAccessed: Date
 
-    init(name: String, data: Data, lastAccessed: Date) {
+    init(name: String, data: Data? = nil, lastAccessed: Date) {
         self.name = name
         self.data = data
         self.lastAccessed = lastAccessed

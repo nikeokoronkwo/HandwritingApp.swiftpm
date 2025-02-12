@@ -59,6 +59,8 @@ struct HandWritingCoreView: View {
     }
 }
 
+
+
 #Preview("Practice HW View") {
     let model = WritingModel(updated: Date(), score: 30, core: false, data: "my hands")
     HandWritingView(model: model)

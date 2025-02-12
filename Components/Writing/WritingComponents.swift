@@ -17,16 +17,27 @@ protocol WritingCanvas: View {
     var canvasView: PKCanvasView { get }
 }
 
+struct WritingViewContainer {
+    /// the drawing
+    
+}
+
 struct WritingView: WritingCanvas {
     @Environment(\.undoManager) private var undoManager
     @StateObject var writingModel: WritingManager = WritingManager()
     @State var canvasView = PKCanvasView()
+    
+//    @Binding var writingViewContainer: WritingViewContainer
+    
+//    init(_ model: Binding<WritingViewContainer>) {
+//        self._writingViewContainer = model
+//    }
 
     var body: some View {
         ZStack(alignment: .bottom) {
             ScrollView {
                 ZStack {
-                    NoteBookView(spacing: 80, lines: 20)
+                    NoteBookBackground(spacing: 80, lines: 20)
                     HandWritingCanvas(canvasView: $canvasView)
                 }
             }
@@ -46,12 +57,15 @@ struct WritingView_17_5: WritingCanvas {
     @Environment(\.preferredPencilDoubleTapAction) private var preferredAction
     @StateObject var writingModel: WritingManager = WritingManager()
     @State var canvasView: PKCanvasView = .init()
+    
+    /// A closure that runs upon saving a PKDrawing
+    /// This closure is called once returning or
 
     var body: some View {
         ZStack(alignment: .bottom) {
             ScrollView {
                 ZStack {
-                    NoteBookView(spacing: 80, lines: 20)
+                    NoteBookBackground(spacing: 80, lines: 20)
                     HandWritingCanvas(canvasView: $canvasView)
                 }
             }
@@ -70,7 +84,8 @@ struct WritingView_17_5: WritingCanvas {
 }
 
 #Preview {
-    WritingView()
+//    let writingViewContainer = WritingViewContainer()
+//    WritingView()
 }
 
 #Preview("iOS 17.5") {

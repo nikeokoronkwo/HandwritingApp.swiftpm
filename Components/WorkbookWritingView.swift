@@ -7,8 +7,16 @@
 
 import SwiftUI
 
+struct WritingController {
+    func writing() -> Data? {
+        return nil
+    }
+}
+
 struct WorkbookWritingView: View {
     @Bindable var workBook: Workbook
+    
+    var writingController: WritingController = WritingController()
     
     @Environment(\.presentationMode) var presentationMode
     
@@ -18,7 +26,29 @@ struct WorkbookWritingView: View {
     }
     
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ZStack(alignment: .topLeading) {
+            WritingView()
+                .toolbar {
+                    ToolbarItem(placement: .topBarLeading) {
+                        Button {
+                            // save workbook data
+                            if let data = writingController.writing() {
+                                workBook.data = data
+                            }
+                            
+                            presentationMode.wrappedValue.dismiss()
+                        } label: {
+                            Label {
+                                Text("Go Back")
+                            } icon: {
+                                Image(systemName: "chevron.backward")
+                            }
+
+                        }
+                    }
+                }
+                .navigationBarTitleDisplayMode(.inline)
+        }
     }
 }
 

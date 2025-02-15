@@ -40,7 +40,6 @@ struct HandWritingCoreView: View {
     /// Used for populating existing data
     @Bindable var model: WritingModel
     
-    
     @Environment(\.presentationMode) private var presentationMode
     
     var body: some View {

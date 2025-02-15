@@ -14,6 +14,10 @@ private func predicate() -> Predicate<WritingModel> {
     }
 }
 
+struct NewPractice: Hashable {
+    var name: String
+}
+
 func formatDate(_ date: Date) -> String {
     let dateFormatter = DateFormatter()
     dateFormatter.dateStyle = .medium
@@ -28,6 +32,23 @@ func formatDate(_ date: Date) -> String {
 ///
 ///
 struct PracticeView: View {
+    var body: some View {
+        PracticeMainView()
+    }
+    
+    
+//        .navigationDestination(for: WritingModel.self) { m in
+////            m.updated = Date()
+//            
+//        }
+//        .navigationDestination(for: String.self) { title in
+//            
+//        }
+//        // TODO: Implement full screen cover for all features
+        
+}
+
+struct PracticeMainView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(filter: predicate(), sort: \.updated, order: .reverse) var practiceModels: [WritingModel]
 
@@ -48,13 +69,13 @@ struct PracticeView: View {
     @State private var newPracticeName: String = ""
 
     var body: some View {
-//        // using if loop to prevent external toolbar rendering twice
+        //        // using if loop to prevent external toolbar rendering twice
         List {
             ForEach(practiceModels) { m in
                 NavigationLink(value: m) {
                     HStack(spacing: 20) {
                         RoundedRectangle(cornerRadius: 8)
-                            // TODO: Model Placeholder Reference
+                        // TODO: Model Placeholder Reference
                             .fill(Color.white)
                             .shadow(radius: 2.5)
                             .frame(width: gridItemSize, height: gridItemSize)
@@ -73,7 +94,7 @@ struct PracticeView: View {
             .onMove { indexSet, to in
                 // move
             }
-
+            
         }
         // TODO: Implement Searching
         .searchable(text: $searchTerm)
@@ -88,7 +109,7 @@ struct PracticeView: View {
                 .alert("New Practice", isPresented: $showNewPracticeAlert) {
                     TextField("Enter Sentence", text: $newPracticeName)
                     Button("Cancel", role: .cancel, action: {})
-                    NavigationLink(value: newPracticeName) {
+                    NavigationLink(value: NewPractice(name: newPracticeName)) {
                         Text("OK")
                     }
                 } message: {
@@ -97,17 +118,6 @@ struct PracticeView: View {
             }
         })
         .padding()
-        .navigationDestination(for: WritingModel.self) { m in
-//            m.updated = Date()
-            HandWritingView(model: m)
-        }
-        .navigationDestination(for: String.self) { title in
-            let newModel = WritingModel(updated: Date(), score: 0, core: false, data: title)
-            
-            HandWritingView(model: newModel)
-        }
-//        // TODO: Implement full screen cover for all features
-        
     }
 }
 

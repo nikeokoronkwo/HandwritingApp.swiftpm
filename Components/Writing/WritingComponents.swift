@@ -17,28 +17,37 @@ protocol WritingCanvas: View {
     var canvasView: PKCanvasView { get }
 }
 
-struct WritingViewContainer {
-    /// the drawing
-    
-}
-
 struct WritingView: WritingCanvas {
     @Environment(\.undoManager) private var undoManager
     @StateObject var writingModel: WritingManager = WritingManager()
+    @ObservedObject var writingController: WritingController
     @State var canvasView = PKCanvasView()
     
-//    @Binding var writingViewContainer: WritingViewContainer
-    
-//    init(_ model: Binding<WritingViewContainer>) {
-//        self._writingViewContainer = model
-//    }
+    init(_ controller: WritingController) {
+        self.writingController = controller
+        
+        var canvasView = PKCanvasView()
+        if let drawing = writingController.drawing {
+            canvasView.drawing = drawing
+        }
+        
+        self._canvasView = State(initialValue: canvasView)
+    }
 
     var body: some View {
         ZStack(alignment: .bottom) {
             ScrollView {
                 ZStack {
                     NoteBookBackground(spacing: 80, lines: 20)
-                    HandWritingCanvas(canvasView: $canvasView)
+                    HandWritingCanvas(canvasView: Binding<PKCanvasView>(get: {
+                        return canvasView
+                    }, set: { newValue in
+                        // set canvas drawing in manager
+                        writingController.drawing = newValue.drawing
+                        
+                        // update canvas
+                        canvasView = newValue
+                    }))
                 }
             }
             // iOS 17.5

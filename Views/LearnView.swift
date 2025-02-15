@@ -57,9 +57,9 @@ struct LearnView: View {
                     } else {
                         // TODO: Levels needs to be passed data as binding variable
 //                        let binding = Binding {
-//                            <#code#>
-//                        } set: { <#Value#> in
-//                            <#code#>
+//
+//                        } set: { Value in
+//
 //                        }
 
                         LevelsView(type: opt.levelType)

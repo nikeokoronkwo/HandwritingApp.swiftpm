@@ -8,6 +8,11 @@
 import SwiftData
 import SwiftUI
 
+struct NewWorkbook: Hashable {
+    var name: String
+}
+
+
 /// # Workbook View
 /// This is the workbook view, where users can make "books" which basically represents free space for users to practice their writing skills on an empty canvas and write. They get to use the same tools they previously used for learning here.
 ///
@@ -49,20 +54,15 @@ struct WorkbookView: View {
         .searchable(text: $searchTerm)
         .toolbar(content: {
             ToolbarItemGroup(placement: .topBarLeading) {
-//                NavigationLink(value: "Untitled") {
-//                    Image(systemName: "plus")
-//                }
+                NavigationLink(value: NewWorkbook(name: "Untitled")) {
+                    Image(systemName: "plus")
+                }
             }
         })
-//        .navigationDestination(for: String.self) { newTitle in
-//            let wb = Workbook(name: newTitle, lastAccessed: Date())
-//            let _ = modelContext.insert(wb)
-//            
+        
+//        .navigationDestination(for: Workbook.self) { wb in
 //            WorkbookWritingView(workBook: wb)
 //        }
-        .navigationDestination(for: Workbook.self) { wb in
-            WorkbookWritingView(workBook: wb)
-        }
     }
 }
 
@@ -73,9 +73,15 @@ struct WorkbookItemView: View {
     private let size: CGFloat = 220
 
     var body: some View {
-        RoundedRectangle(cornerRadius: 15)
-            // TODO: Model Placeholder Reference
-            .fill(Color.white)
+        Group {
+            if let data = book.data {
+                ImageFromData(data)
+                    .resizable()
+            } else {
+                RoundedRectangle(cornerRadius: 15)
+                    .fill(Color.white)
+            }
+        }
             .frame(width: size, height: size)
             .shadow(radius: 3)
             .overlay(alignment: .bottom) {
@@ -116,7 +122,7 @@ struct WorkbookItemView: View {
     DashboardView(appActivity: .workbook)
 }
 
-#Preview {
+#Preview("WorkbookView with Swift Data") {
     ModelViewContainer(items: {
         let randomNotebooks = [
             "my book",

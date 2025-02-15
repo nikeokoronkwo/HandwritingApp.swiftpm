@@ -6,17 +6,28 @@
 //
 
 import SwiftUI
+import PencilKit
 
-struct WritingController {
+class WritingController: ObservableObject {
+    @Published var drawing: PKDrawing?
+    
+    init(drawing: PKDrawing? = nil) {
+        self.drawing = drawing
+    }
+    
     func writing() -> Data? {
-        return nil
+        if let d = drawing {
+            return d.dataRepresentation()
+        } else {
+            return nil
+        }
     }
 }
 
 struct WorkbookWritingView: View {
     @Bindable var workBook: Workbook
     
-    var writingController: WritingController = WritingController()
+    @StateObject var writingController: WritingController = WritingController()
     
     @Environment(\.presentationMode) var presentationMode
     
@@ -27,15 +38,18 @@ struct WorkbookWritingView: View {
     
     var body: some View {
         ZStack(alignment: .topLeading) {
-            WritingView()
+            WritingView(writingController)
+                .navigationBarBackButtonHidden(true)
                 .toolbar {
                     ToolbarItem(placement: .topBarLeading) {
                         Button {
-                            // save workbook data
-                            if let data = writingController.writing() {
-                                workBook.data = data
+                            debugPrint(writingController.drawing)
+                            // save data
+                            if let d = writingController.writing() {
+                                workBook.data = d
                             }
                             
+                            // go back
                             presentationMode.wrappedValue.dismiss()
                         } label: {
                             Label {
@@ -45,9 +59,9 @@ struct WorkbookWritingView: View {
                             }
 
                         }
+
                     }
                 }
-                .navigationBarTitleDisplayMode(.inline)
         }
     }
 }

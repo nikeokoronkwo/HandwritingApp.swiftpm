@@ -6,6 +6,7 @@ import SwiftUI
 ///
 struct DashboardView: View {
     // TODO: Categorize Features into a model
+    @Environment(\.modelContext) var modelContext
 
     /// The initialiser is just for the sake of previewing/testing
     init(appActivity: AppActivity? = nil) {
@@ -37,28 +38,50 @@ struct DashboardView: View {
             }
             .navigationTitle("Explore")
         } detail: {
-
-            Group {
-                if let appActivity {
-                    /// Select given activity to do
-                    Group {
-                        switch appActivity {
-                        case .learn:
-                            LearnView()
-                        case .practice:
-                            PracticeView()
-                        case .workbook:
-                            WorkbookView()
+            NavigationStack {
+                Group {
+                    if let appActivity {
+                        /// Select given activity to do
+                        Group {
+                            switch appActivity {
+                            case .learn:
+                                LearnView()
+                            case .practice:
+                                PracticeView()
+                            case .workbook:
+                                WorkbookView()
+                            }
                         }
+                        .padding(.top, 20)
+                        .navigationTitle(appActivity.rawValue)
+                    } else {
+                        /// Provide sample display to get started
+                        ///
+                        // TODO: Update this with some better UI and icon
+                        Text("Select an activity from the sidebar.")
+                            .navigationTitle("Dashboard")
                     }
-                    .padding(.top, 20)
-                    .navigationTitle(appActivity.rawValue)
-                } else {
-                    /// Provide sample display to get started
-                    ///
-                    // TODO: Update this with some better UI and icon
-                    Text("Select an activity from the sidebar.")
-                        .navigationTitle("Dashboard")
+                }
+                .navigationDestination(for: WritingModel.self) { mdl in
+                    HandWritingView(model: mdl)
+                }
+                .navigationDestination(for: NewPractice.self) { new in
+                    // make new practice
+                    let newModel = WritingModel(new.name, updated: Date.now, score: 0, core: false, data: new.name)
+        //
+                    let _ = modelContext.insert(newModel)
+        //
+                    HandWritingView(model: newModel)
+                }
+                .navigationDestination(for: Workbook.self) { wb in
+                    WorkbookWritingView(workBook: wb)
+                }
+                .navigationDestination(for: NewWorkbook.self) { new in
+        //            // make new workbook
+                    let wb = Workbook(name: new.name, lastAccessed: Date.now)
+                    let _ = modelContext.insert(wb)
+        //
+                    WorkbookWritingView(workBook: wb)
                 }
             }
             .toolbar {

@@ -26,9 +26,13 @@ struct WritingView: WritingCanvas {
     init(_ controller: WritingController) {
         self.writingController = controller
         
-        var canvasView = PKCanvasView()
-        if let drawing = writingController.drawing {
+        let canvasView = PKCanvasView()
+        
+        if let drawing = controller.drawing {
             canvasView.drawing = drawing
+            if controller.imgData == nil {
+                self.writingController.imgData = controller.drawing?.image(from: canvasView.bounds, scale: 1.0).pngData()
+            }
         }
         
         self._canvasView = State(initialValue: canvasView)
@@ -42,6 +46,7 @@ struct WritingView: WritingCanvas {
                     HandWritingCanvas(canvasView: Binding<PKCanvasView>(get: {
                         return canvasView
                     }, set: { newValue in
+                        debugPrint(newValue)
                         // set canvas drawing in manager
                         writingController.drawing = newValue.drawing
                         
@@ -55,6 +60,7 @@ struct WritingView: WritingCanvas {
             ToolBarComponent(canvasView: $canvasView)
         }
         .environmentObject(writingModel)
+        .environmentObject(writingController)
     }
 
 }

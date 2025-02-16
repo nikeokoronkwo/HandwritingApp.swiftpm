@@ -74,7 +74,7 @@ struct WorkbookItemView: View {
 
     var body: some View {
         Group {
-            if let data = book.data {
+            if let data = book.imgData {
                 ImageFromData(data)
                     .resizable()
             } else {

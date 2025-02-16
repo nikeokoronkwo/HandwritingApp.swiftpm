@@ -10,17 +10,11 @@ import PencilKit
 
 class WritingController: ObservableObject {
     @Published var drawing: PKDrawing?
+    @Published var imgData: Data?
     
-    init(drawing: PKDrawing? = nil) {
+    init(drawing: PKDrawing? = nil, img: Data? = nil) {
         self.drawing = drawing
-    }
-    
-    func writing() -> Data? {
-        if let d = drawing {
-            return d.dataRepresentation()
-        } else {
-            return nil
-        }
+        self.imgData = img
     }
 }
 
@@ -34,6 +28,13 @@ struct WorkbookWritingView: View {
     init(workBook: Workbook) {
         self.workBook = workBook
         self.workBook.lastAccessed = Date()
+        
+        if let d = workBook.data {
+            let drawing = try? PKDrawing(data: d)
+            self._writingController = StateObject(wrappedValue: WritingController(drawing: drawing))
+        } else {
+            self._writingController = StateObject(wrappedValue: WritingController())
+        }
     }
     
     var body: some View {
@@ -44,9 +45,11 @@ struct WorkbookWritingView: View {
                     ToolbarItem(placement: .topBarLeading) {
                         Button {
                             debugPrint(writingController.drawing)
+                            
                             // save data
-                            if let d = writingController.writing() {
-                                workBook.data = d
+                            if let d = writingController.drawing {
+                                workBook.data = d.dataRepresentation()
+                                workBook.imgData = writingController.imgData
                             }
                             
                             // go back

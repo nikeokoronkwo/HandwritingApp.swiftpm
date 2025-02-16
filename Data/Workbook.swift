@@ -15,11 +15,14 @@ class Workbook {
     var name: String
     @Attribute(.unique) var id: UUID = UUID()
     @Attribute(.externalStorage) var data: Data?
+    @Attribute(.externalStorage) var imgData: Data?
     var lastAccessed: Date
 
-    init(name: String, data: Data? = nil, lastAccessed: Date) {
+    init(name: String, data: Data? = nil, imgData: Data? = nil, lastAccessed: Date) {
         self.name = name
+        self.id = UUID()
         self.data = data
+        self.imgData = imgData
         self.lastAccessed = lastAccessed
     }
 }

@@ -8,8 +8,10 @@
 import SwiftUI
 
 func ImageFromData(_ data: Data) -> Image {
+    debugPrint(data)
+    
     #if canImport(UIKit)
-        return Image(uiImage: UIImage(data: data)!)
+    return Image(uiImage: UIImage(data: data) ?? UIImage(ciImage: CIImage(data: data)!))
     #elseif canImport(AppKit)
         return Image(nsImage: NSImage(data: data))
 //        #else

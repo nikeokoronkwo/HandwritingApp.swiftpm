@@ -59,10 +59,12 @@ struct LevelsAsset: Codable {
 
 extension LevelsAsset {
     func toJson() throws -> String {
-        guard let json = String(
-            data: try JSONEncoder().encode(self),
-            encoding: .utf8
-        ) else {
+        guard
+            let json = String(
+                data: try JSONEncoder().encode(self),
+                encoding: .utf8
+            )
+        else {
             // custom error
             throw NSError()
         }
@@ -71,7 +73,7 @@ extension LevelsAsset {
 }
 
 // FIXME: Fix asset loading to handle error catching
-func loadAssets(url: URL) throws -> LevelsAsset  {
+func loadAssets(url: URL) throws -> LevelsAsset {
     let data = try Data(contentsOf: url)
     return try JSONDecoder().decode(LevelsAsset.self, from: data)
 }

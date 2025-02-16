@@ -1,15 +1,12 @@
 import SwiftData
 import SwiftUI
 
-
-
 /// The application entrypoint
 @main
 struct MyApp: App {
     /// Whether the user has been onboarded
     @AppStorage("isOnboarded") var userIsOnboarded: Bool = true
     @State private var model: LevelsModel = .init()
-    
 
     var modelContainer: ModelContainer = {
         //        do {
@@ -47,14 +44,14 @@ struct MyApp: App {
                     OnboardingView()
                 } else {
                     DashboardView()
-                    // TODO: Investigate multiple model containers/contexts
+                        // TODO: Investigate multiple model containers/contexts
                         .modelContainer(for: [
                             Workbook.self,
                             RealtimeWritingModel.self,
                             WritingModel.self,
                         ])
                         .environment(\.levelModel, model)
-//                      .modelContainer(modelContainer)
+                    //                      .modelContainer(modelContainer)
 
                 }
             }
@@ -63,73 +60,87 @@ struct MyApp: App {
             }
         }
     }
-    
+
     nonisolated func getAssets() async {
         // get assets from bundle
-        
-        guard let levelsBundleUrl = Bundle.main.url(forResource: "levels", withExtension: "json") else {
+
+        guard let levelsBundleUrl = Bundle.main.url(forResource: "levels", withExtension: "json")
+        else {
             // error out
             return
         }
-        
-        guard let assetsBundleUrls = Bundle.main.urls(forResourcesWithExtension: "png", subdirectory: ".") else {
+
+        guard
+            let assetsBundleUrls = Bundle.main.urls(
+                forResourcesWithExtension: "png", subdirectory: ".")
+        else {
             // error out
             return
         }
-        
+
         // load to documents directory
         let documentsUrl = URL.documentsDirectory
-        
+
         do {
             guard let levelData = try? String(contentsOf: levelsBundleUrl) else {
                 // throw error
                 return
             }
-            
-            guard let levelDataAsJson = try? JSONDecoder().decode(LevelsAsset.self, from: levelData.data(using: .utf8)!) else {
+
+            guard
+                let levelDataAsJson = try? JSONDecoder().decode(
+                    LevelsAsset.self, from: levelData.data(using: .utf8)!)
+            else {
                 // throw error
                 return
             }
-            
+
             debugPrint(levelData)
             debugPrint(levelDataAsJson)
-            
-            if levelDataAsJson.advanced.count == 0 ||
-                levelDataAsJson.basic.count == 0 ||
-                levelDataAsJson.expert.count == 0 {
+
+            if levelDataAsJson.advanced.count == 0 || levelDataAsJson.basic.count == 0
+                || levelDataAsJson.expert.count == 0
+            {
                 // throw error
             }
-            
-            
-            let assetsDataDict = try assetsBundleUrls.reduce(into: [String: Data]()) { partialResult, url in
+
+            let assetsDataDict = try assetsBundleUrls.reduce(into: [String: Data]()) {
+                partialResult, url in
                 partialResult[url.lastPathComponent] = try Data(contentsOf: url)
             }
-            
-            try levelData.write(to: documentsUrl.appending(path: "levels.json"), atomically: true, encoding: .utf8)
-            
+
+            try levelData.write(
+                to: documentsUrl.appending(path: "levels.json"), atomically: true, encoding: .utf8)
+
             var isDir: ObjCBool = true
-            
+
             try assetsDataDict.forEach { aDictElement in
-                if !FileManager.default.fileExists(atPath: documentsUrl.appending(path: "assets").absoluteString, isDirectory: &isDir) {
-                    try FileManager.default.createDirectory(at: documentsUrl.appending(path: "assets"), withIntermediateDirectories: true)
+                if !FileManager.default.fileExists(
+                    atPath: documentsUrl.appending(path: "assets").absoluteString,
+                    isDirectory: &isDir)
+                {
+                    try FileManager.default.createDirectory(
+                        at: documentsUrl.appending(path: "assets"),
+                        withIntermediateDirectories: true)
                 }
-                try aDictElement.value.write(to: documentsUrl.appending(path: "assets").appending(path: aDictElement.key), options: [.atomic, .completeFileProtection])
+                try aDictElement.value.write(
+                    to: documentsUrl.appending(path: "assets").appending(path: aDictElement.key),
+                    options: [.atomic, .completeFileProtection])
             }
-            
-            
 
             await MainActor.run {
                 model.jsonPath = documentsUrl.appending(path: "levels.json")
                 assetsDataDict.forEach { el in
-                    model.assetPath[el.key] = documentsUrl.appending(path: "assets").appending(path: el.key)
+                    model.assetPath[el.key] = documentsUrl.appending(path: "assets").appending(
+                        path: el.key)
                 }
-                
+
                 debugPrint("+++++++++++++++++")
                 debugPrint(model)
                 debugPrint(model.assetPath)
                 debugPrint(model.jsonPath)
             }
-            
+
         } catch {
             // handle errors
             debugPrint(error)

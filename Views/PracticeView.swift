@@ -35,17 +35,16 @@ struct PracticeView: View {
     var body: some View {
         PracticeMainView()
     }
-    
-    
-//        .navigationDestination(for: WritingModel.self) { m in
-////            m.updated = Date()
-//            
-//        }
-//        .navigationDestination(for: String.self) { title in
-//            
-//        }
-//        // TODO: Implement full screen cover for all features
-        
+
+    //        .navigationDestination(for: WritingModel.self) { m in
+    ////            m.updated = Date()
+    //
+    //        }
+    //        .navigationDestination(for: String.self) { title in
+    //
+    //        }
+    //        // TODO: Implement full screen cover for all features
+
 }
 
 struct PracticeMainView: View {
@@ -57,7 +56,7 @@ struct PracticeMainView: View {
 
     /// State variable that displays an alert for creating a new practice
     @State private var showNewPracticeAlert = false
-    
+
     @State private var newPractice = false
     @State private var practice = false
     @State private var model: WritingModel?
@@ -75,7 +74,7 @@ struct PracticeMainView: View {
                 NavigationLink(value: m) {
                     HStack(spacing: 20) {
                         RoundedRectangle(cornerRadius: 8)
-                        // TODO: Model Placeholder Reference
+                            // TODO: Model Placeholder Reference
                             .fill(Color.white)
                             .shadow(radius: 2.5)
                             .frame(width: gridItemSize, height: gridItemSize)
@@ -94,7 +93,7 @@ struct PracticeMainView: View {
             .onMove { indexSet, to in
                 // move
             }
-            
+
         }
         // TODO: Implement Searching
         .searchable(text: $searchTerm)
@@ -121,8 +120,6 @@ struct PracticeMainView: View {
     }
 }
 
-
-
 #Preview {
     PracticeView()
 }
@@ -132,43 +129,47 @@ struct PracticeMainView: View {
 }
 
 #Preview("Preview Practice with SwiftData") {
-    ModelViewContainer(items: {
-        let randomWords = [
-            "ballotelli",
-            "many",
-            "My name is Jason",
-            "desperate",
-            "The man is running",
-            "Someone's Watching",
-            "Placeholder",
-        ]
-        return (1..<10).map { i in
-            return WritingModel(
-                updated: Date(), score: Float.random(in: 1...100), core: false,
-                data: randomWords.randomElement()!, result: nil)
-        }
-    }(), {
-        PracticeView()
-    })
+    ModelViewContainer(
+        items: {
+            let randomWords = [
+                "ballotelli",
+                "many",
+                "My name is Jason",
+                "desperate",
+                "The man is running",
+                "Someone's Watching",
+                "Placeholder",
+            ]
+            return (1..<10).map { i in
+                return WritingModel(
+                    updated: Date(), score: Float.random(in: 1...100), core: false,
+                    data: randomWords.randomElement()!, result: nil)
+            }
+        }(),
+        {
+            PracticeView()
+        })
 }
 
 #Preview("Preview Dashboard with SwiftData") {
-    ModelViewContainer(items: {
-        let randomWords = [
-            "ballotelli",
-            "many",
-            "My name is Jason",
-            "desperate",
-            "The man is running",
-            "Someone's Watching",
-            "Placeholder",
-        ]
-        return (1..<10).map { i in
-            return WritingModel(
-                updated: Date(), score: Float.random(in: 1...100), core: false,
-                data: randomWords.randomElement()!, result: nil)
-        }
-    }()) {
+    ModelViewContainer(
+        items: {
+            let randomWords = [
+                "ballotelli",
+                "many",
+                "My name is Jason",
+                "desperate",
+                "The man is running",
+                "Someone's Watching",
+                "Placeholder",
+            ]
+            return (1..<10).map { i in
+                return WritingModel(
+                    updated: Date(), score: Float.random(in: 1...100), core: false,
+                    data: randomWords.randomElement()!, result: nil)
+            }
+        }()
+    ) {
         DashboardView(appActivity: .practice)
     }
 }

@@ -6,28 +6,26 @@
 //
 import SwiftUI
 
-
 //class
 struct
-LevelsModel
-//: ObservableObject
+    LevelsModel//: ObservableObject
 {
-//    @Published
+    //    @Published
     var jsonPath: URL?
-//    @Published
+    //    @Published
     var assetPath: [String: URL]
-    
-    init(jsonPath: URL? = nil, assetPath: [String : URL] = [:]) {
+
+    init(jsonPath: URL? = nil, assetPath: [String: URL] = [:]) {
         self.jsonPath = jsonPath
         self.assetPath = assetPath
-        
+
         if let p = jsonPath {
             self.levelAssets = try? loadAssets(url: p)
         } else {
             self.levelAssets = nil
         }
     }
-    
+
     var levelAssets: LevelsAsset?
 }
 

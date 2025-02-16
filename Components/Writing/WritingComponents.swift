@@ -22,19 +22,21 @@ struct WritingView: WritingCanvas {
     @StateObject var writingModel: WritingManager = WritingManager()
     @ObservedObject var writingController: WritingController
     @State var canvasView = PKCanvasView()
-    
+
     init(_ controller: WritingController) {
         self.writingController = controller
-        
+
         let canvasView = PKCanvasView()
-        
+
         if let drawing = controller.drawing {
             canvasView.drawing = drawing
             if controller.imgData == nil {
-                self.writingController.imgData = controller.drawing?.image(from: canvasView.bounds, scale: 1.0).pngData()
+                self.writingController.imgData = controller.drawing?.image(
+                    from: canvasView.bounds, scale: 1.0
+                ).pngData()
             }
         }
-        
+
         self._canvasView = State(initialValue: canvasView)
     }
 
@@ -43,16 +45,19 @@ struct WritingView: WritingCanvas {
             ScrollView {
                 ZStack {
                     NoteBookBackground(spacing: 80, lines: 20)
-                    HandWritingCanvas(canvasView: Binding<PKCanvasView>(get: {
-                        return canvasView
-                    }, set: { newValue in
-                        debugPrint(newValue)
-                        // set canvas drawing in manager
-                        writingController.drawing = newValue.drawing
-                        
-                        // update canvas
-                        canvasView = newValue
-                    }))
+                    HandWritingCanvas(
+                        canvasView: Binding<PKCanvasView>(
+                            get: {
+                                return canvasView
+                            },
+                            set: { newValue in
+                                debugPrint(newValue)
+                                // set canvas drawing in manager
+                                writingController.drawing = newValue.drawing
+
+                                // update canvas
+                                canvasView = newValue
+                            }))
                 }
             }
             // iOS 17.5
@@ -72,7 +77,7 @@ struct WritingView_17_5: WritingCanvas {
     @Environment(\.preferredPencilDoubleTapAction) private var preferredAction
     @StateObject var writingModel: WritingManager = WritingManager()
     @State var canvasView: PKCanvasView = .init()
-    
+
     /// A closure that runs upon saving a PKDrawing
     /// This closure is called once returning or
 
@@ -99,8 +104,8 @@ struct WritingView_17_5: WritingCanvas {
 }
 
 #Preview {
-//    let writingViewContainer = WritingViewContainer()
-//    WritingView()
+    //    let writingViewContainer = WritingViewContainer()
+    //    WritingView()
 }
 
 #Preview("iOS 17.5") {

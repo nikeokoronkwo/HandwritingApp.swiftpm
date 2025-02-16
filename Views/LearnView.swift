@@ -35,7 +35,7 @@ extension LevelsAsset {
 
 struct LearnView: View {
     @Environment(\.levelModel) var levelModel
-    
+
     private var options: [LearnOption] = [
         LearnOption(
             name: "Foundations", description: "Learn the fundamentals of good handwriting",
@@ -56,11 +56,11 @@ struct LearnView: View {
                         Text("Loading...")
                     } else {
                         // TODO: Levels needs to be passed data as binding variable
-//                        let binding = Binding {
-//
-//                        } set: { Value in
-//
-//                        }
+                        //                        let binding = Binding {
+                        //
+                        //                        } set: { Value in
+                        //
+                        //                        }
 
                         LevelsView(type: opt.levelType)
                     }
@@ -96,8 +96,6 @@ struct LearnView: View {
         DashboardView(appActivity: .learn)
     }
 }
-
-
 
 #Preview("Try with real data") {
     EnvironmentObjectViewContainer {

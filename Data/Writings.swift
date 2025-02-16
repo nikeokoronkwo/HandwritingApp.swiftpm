@@ -31,7 +31,10 @@ class WritingModel {
     /// The user's drawing stored externally but referenced here
     @Attribute(.externalStorage) var result: Data?
 
-    init(_ title: String? = nil, updated: Date, score: Float, core: Bool, data: String, result: Data? = nil) {
+    init(
+        _ title: String? = nil, updated: Date, score: Float, core: Bool, data: String,
+        result: Data? = nil
+    ) {
         self.updated = updated
         self.score = score
         self.core = core

@@ -10,15 +10,16 @@ import SwiftUI
 
 class PKCanvasCoordinator: NSObject, PKCanvasViewDelegate {
     @ObservedObject var writingController: WritingController
-    
+
     init(_ writingController: WritingController) {
         self.writingController = writingController
     }
-    
+
     func canvasViewDrawingDidChange(_ canvasView: PKCanvasView) {
         writingController.drawing = canvasView.drawing
-        writingController.imgData = canvasView.drawing.image(from: UIScreen.main.bounds, scale: 1.0).pngData()
-        
+        writingController.imgData = canvasView.drawing.image(from: UIScreen.main.bounds, scale: 1.0)
+            .pngData()
+
     }
 }
 
@@ -59,11 +60,11 @@ struct HandWritingCanvas: UIViewRepresentable {
         canvasView.drawingPolicy = .pencilOnly
         canvasView.isOpaque = false
         canvasView.delegate = context.coordinator
-        
+
         updateCanvasTool()
         return canvasView
     }
-    
+
     func makeCoordinator() -> PKCanvasCoordinator {
         PKCanvasCoordinator(writingController)
     }

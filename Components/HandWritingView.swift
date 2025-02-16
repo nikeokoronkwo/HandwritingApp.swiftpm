@@ -11,12 +11,12 @@ struct HandWritingView: View {
     /// The writing model for the given view, if any
     /// Used for populating existing data
     @Bindable var model: WritingModel
-    
+
     init(model: WritingModel) {
         self.model = model
         self.model.updated = Date()
     }
-    
+
     @Environment(\.presentationMode) private var presentationMode
 
     var body: some View {
@@ -39,9 +39,9 @@ struct HandWritingCoreView: View {
     /// The writing model for the given view, if any
     /// Used for populating existing data
     @Bindable var model: WritingModel
-    
+
     @Environment(\.presentationMode) private var presentationMode
-    
+
     var body: some View {
         ZStack {
             Button {
@@ -57,8 +57,6 @@ struct HandWritingCoreView: View {
         }
     }
 }
-
-
 
 #Preview("Practice HW View") {
     let model = WritingModel(updated: Date(), score: 30, core: false, data: "my hands")

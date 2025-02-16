@@ -67,20 +67,21 @@ struct DashboardView: View {
                 }
                 .navigationDestination(for: NewPractice.self) { new in
                     // make new practice
-                    let newModel = WritingModel(new.name, updated: Date.now, score: 0, core: false, data: new.name)
-        //
+                    let newModel = WritingModel(
+                        new.name, updated: Date.now, score: 0, core: false, data: new.name)
+                    //
                     let _ = modelContext.insert(newModel)
-        //
+                    //
                     HandWritingView(model: newModel)
                 }
                 .navigationDestination(for: Workbook.self) { wb in
                     WorkbookWritingView(workBook: wb)
                 }
                 .navigationDestination(for: NewWorkbook.self) { new in
-        //            // make new workbook
+                    //            // make new workbook
                     let wb = Workbook(name: new.name, lastAccessed: Date.now)
                     let _ = modelContext.insert(wb)
-        //
+                    //
                     WorkbookWritingView(workBook: wb)
                 }
             }

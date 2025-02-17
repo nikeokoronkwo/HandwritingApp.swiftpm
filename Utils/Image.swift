@@ -17,3 +17,4 @@ func ImageFromData(_ data: Data) -> Image {
     //        #else
     #endif
 }
+

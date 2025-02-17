@@ -1,5 +1,5 @@
 //
-//  HandWritingCanvas.swift
+//  WritingCanvas.swift
 //  HandWriting
 //
 //  Created by Nikechukwu Okoronkwo on 02/02/2025.
@@ -26,7 +26,7 @@ class PKCanvasCoordinator: NSObject, PKCanvasViewDelegate {
 /// The base interface for interfacing PencilKit's ``PKCanvasView`` with SwiftUI
 ///
 /// At the moment it is a minimal wrapper with support only for necessary tools needed for this handwriting application
-struct HandWritingCanvas: UIViewRepresentable {
+struct WritingCanvas: UIViewRepresentable {
     @EnvironmentObject var writingModel: WritingManager
     @EnvironmentObject var writingController: WritingController
     @Binding var canvasView: PKCanvasView

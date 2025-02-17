@@ -12,12 +12,13 @@ import SwiftUI
 /// This protocol is intended for sharing functionality between the workbook writer and the normal handwriting view
 ///
 /// Any tool that will make use of writing in this app conforms to this protocol, as it provides the environment for the canvas and the
-protocol WritingCanvas: View {
+protocol WritingCanvasRepresentable: View {
     var writingModel: WritingManager { get }
     var canvasView: PKCanvasView { get }
 }
 
-struct WritingView: WritingCanvas {
+
+struct WritingView: WritingCanvasRepresentable {
     @Environment(\.undoManager) private var undoManager
     @StateObject var writingModel: WritingManager = WritingManager()
     @ObservedObject var writingController: WritingController
@@ -45,7 +46,7 @@ struct WritingView: WritingCanvas {
             ScrollView {
                 ZStack {
                     NoteBookBackground(spacing: 80, lines: 20)
-                    HandWritingCanvas(
+                    WritingCanvas(
                         canvasView: Binding<PKCanvasView>(
                             get: {
                                 return canvasView
@@ -71,7 +72,7 @@ struct WritingView: WritingCanvas {
 }
 
 @available(iOS 17.5, *)
-struct WritingView_17_5: WritingCanvas {
+struct WritingView_17_5: WritingCanvasRepresentable {
     @Environment(\.undoManager) private var undoManager
     // iOS 17.5
     @Environment(\.preferredPencilDoubleTapAction) private var preferredAction
@@ -86,7 +87,7 @@ struct WritingView_17_5: WritingCanvas {
             ScrollView {
                 ZStack {
                     NoteBookBackground(spacing: 80, lines: 20)
-                    HandWritingCanvas(canvasView: $canvasView)
+                    WritingCanvas(canvasView: $canvasView)
                 }
             }
             // iOS 17.5

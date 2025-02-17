@@ -31,10 +31,20 @@ extension LevelsAsset {
             return self.expert
         }
     }
+    
+    mutating func setType(_ type: LevelType, new: Levels, toURL: URL) {
+        // set type
+        
+        // update path
+        let data = try? JSONEncoder().encode(self)
+        
+        try? data?.write(to: toURL, options: [.atomic])
+    }
 }
 
 struct LearnView: View {
-    @Environment(\.levelModel) var levelModel
+//    @Environment(\.levelModel)
+    @EnvironmentObject var levelModel: LevelsModel
 
     private var options: [LearnOption] = [
         LearnOption(
@@ -47,23 +57,36 @@ struct LearnView: View {
             name: "Custom", description: "Try out something new, with no guides", levelType: .expert
         ),
     ]
+    
+    var cocoroocoo: Void {
+        debugPrint("LLLLLLLLELELELELELELELELE")
+        debugPrint(levelModel.levelAssets)
+    }
 
     var body: some View {
         TriangularLayout {
             ForEach(options, id: \.name) { opt in
                 NavigationLink {
-                    if levelModel == nil {
-                        Text("Loading...")
-                    } else {
+//                    if levelModel == nil {
+//                        Text("Loading...")
+//                    } else {
                         // TODO: Levels needs to be passed data as binding variable
-                        //                        let binding = Binding {
-                        //
-                        //                        } set: { Value in
-                        //
-                        //                        }
+                    let _ = cocoroocoo
+                        let levelBinding = Binding<Levels> {
+                            return levelModel.levelAssets?.forType(opt.levelType) ?? []
+                        } set: { new in
+                            switch opt.levelType {
+                                case .basic:
+                                levelModel.levelAssets?.basic = new
+                                case .advanced:
+                                    levelModel.levelAssets?.advanced = new
+                                case .expert:
+                                    levelModel.levelAssets?.expert = new
+                            }
+                        }
 
-                        LevelsView(type: opt.levelType)
-                    }
+                        LevelsView(type: opt.levelType, levels: levelBinding)
+//                    }
                 } label: {
                     VStack {
                         // TODO: Overlay incase man wanna continue from where he stopped
@@ -88,7 +111,8 @@ struct LearnView: View {
 #Preview {
     let demoLevelModel = LevelsModel(assetPath: [:])
     DashboardView(appActivity: .learn)
-        .environment(\.levelModel, demoLevelModel)
+//        .environment(\.levelModel, demoLevelModel)
+        .environmentObject(demoLevelModel)
 }
 
 #Preview("Dashboard Preview") {

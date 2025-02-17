@@ -21,6 +21,14 @@ struct LevelsView: View {
     @State private var searchTerm: String = ""
 
     var type: LevelType
+    @Binding var levels: Levels
+    
+    init(type: LevelType, levels: Binding<Levels>) {
+        self.type = type
+        self._levels = levels
+        
+        debugPrint(levels)
+    }
 
     private let gridVSpacing: CGFloat = 40
 
@@ -41,8 +49,7 @@ struct LevelsView: View {
                 alignment: .center,
                 spacing: gridVSpacing
             ) {
-                #if targetEnvironment(simulator)
-                    ForEach(0..<12) { index in
+                ForEach(levels, id: \.index) { level in
                         NavigationLink {
                             // TODO: Pass data down to handwriting view
                             //                            HandWritingView()
@@ -52,11 +59,11 @@ struct LevelsView: View {
                                     .fill(Color.white)
                                     .frame(width: gridItemSize, height: gridItemSize)
                                     .shadow(radius: 4)
-                                Text("Level \(index + 1)")
+                                Text(level.name)
+                                    .foregroundColor(.primary)
                             }
                         }
                     }
-                #endif
             }
             .padding()
         }
@@ -64,7 +71,18 @@ struct LevelsView: View {
         .searchable(text: $searchTerm)
     }
 }
+//
+//#Preview {
+//    var levels = []
+//    LevelsView(type: .advanced, levels: Binding(get: {
+//        return levels
+//    }, set: { v in
+//        levels = v
+//    }))
+//}
 
-#Preview {
-    LevelsView(type: .advanced)
+#Preview("Dashboard Preview") {
+    EnvironmentObjectViewContainer {
+        DashboardView(appActivity: .learn)
+    }
 }

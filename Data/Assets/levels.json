@@ -1,11 +1,26 @@
 {
     "basic": [{
-            
+        "index": 1,
+        "name": "First Steps",
+        "info": {
+            "type": "word",
+            "value": "a"
+        }
+    }, {
+        "index": 2,
+        "name": "Second Step",
+        "info": {
+            "type": "word",
+            "value": "b"
+        }
+    }, {
+        "index": 3,
+        "name": "C",
+        "info": {
+            "type": "word",
+            "value": "c"
+        }
     }],
-    "advanced": [{
-    
-    }],
-    "expert": [{
-        
-    }]
+    "advanced": [],
+    "expert": []
 }

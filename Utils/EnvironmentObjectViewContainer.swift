@@ -105,6 +105,8 @@ struct EnvironmentObjectViewContainer<V: View>: View {
         Group {
             content
         }
-        .environment(\.levelModel, model)
+//        .environment(\.levelModel, model)
+        .environmentObject(model)
+        
     }
 }

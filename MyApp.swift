@@ -6,7 +6,8 @@ import SwiftUI
 struct MyApp: App {
     /// Whether the user has been onboarded
     @AppStorage("isOnboarded") var userIsOnboarded: Bool = true
-    @State private var model: LevelsModel = .init()
+//    @State
+    @StateObject private var model: LevelsModel = .init()
 
     var modelContainer: ModelContainer = {
         //        do {
@@ -33,6 +34,10 @@ struct MyApp: App {
         //                                   WritingData.self)
         //        }
     }()
+    
+    init() {
+        RalewayDots.registerFonts()
+    }
 
     /// The Main View one goes to once the application is opened
     ///
@@ -50,7 +55,8 @@ struct MyApp: App {
                             RealtimeWritingModel.self,
                             WritingModel.self,
                         ])
-                        .environment(\.levelModel, model)
+//                        .environment(\.levelModel, model)
+                        .environmentObject(model)
                     //                      .modelContainer(modelContainer)
 
                 }

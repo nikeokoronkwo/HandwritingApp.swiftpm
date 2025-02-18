@@ -64,6 +64,7 @@ struct WorkbookView: View {
     }
 }
 
+/// A view used to displau a workbook item in the given grid
 struct WorkbookItemView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(\.colorScheme) var colorScheme

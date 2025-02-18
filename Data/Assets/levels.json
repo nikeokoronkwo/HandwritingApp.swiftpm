@@ -1,40 +1,47 @@
 {
-    "basic": [{
-        "index": 1,
-        "name": "First Steps",
-        "info": {
-            "type": "word",
-            "value": "a"
-        }
-    }, {
-        "index": 2,
-        "name": "Second Step",
-        "info": {
-            "type": "word",
-            "value": "b"
-        }
-    }, {
-        "index": 3,
-        "name": "C",
-        "info": {
-            "type": "word",
-            "value": "c"
-        }
-    }, {
-        "index": 4,
-        "name": "Multi-letter",
-        "info": {
-            "type": "word",
-            "value": "abc"
-        }
-    }],
-    "advanced": [{
-        "index": 1,
-        "name": "Mary had a little lamb",
-        "info": {
-            "type": "word",
-            "value": "Mary had a little lamb"
-        }
-    }],
-    "expert": []
+  "basic": [
+    {
+      "index": 1,
+      "name": "First Steps",
+      "info": {
+        "type": "word",
+        "value": "a"
+      }
+    },
+    {
+      "index": 2,
+      "name": "Second Step",
+      "info": {
+        "type": "word",
+        "value": "b"
+      }
+    },
+    {
+      "index": 3,
+      "name": "C",
+      "info": {
+        "type": "word",
+        "value": "c"
+      }
+    },
+    {
+      "index": 4,
+      "name": "Multi-letter",
+      "info": {
+        "type": "word",
+        "value": "abc"
+      }
+    }
+  ],
+  "advanced": [
+    {
+      "index": 1,
+      "name": "Mary had a little lamb",
+      "info": {
+        "type": "word",
+        "value": "Mary had a little lamb"
+      }
+    }
+  ],
+  "expert": []
 }

@@ -25,7 +25,7 @@
         "name": "Multi-letter",
         "info": {
             "type": "word",
-            "value": "abc",
+            "value": "abc"
         }
     }],
     "advanced": [{
@@ -33,7 +33,7 @@
         "name": "Mary had a little lamb",
         "info": {
             "type": "word",
-            "value": "Mary had a little lamb",
+            "value": "Mary had a little lamb"
         }
     }],
     "expert": []

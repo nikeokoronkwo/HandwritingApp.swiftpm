@@ -20,7 +20,21 @@
             "type": "word",
             "value": "c"
         }
+    }, {
+        "index": 4,
+        "name": "Multi-letter",
+        "info": {
+            "type": "word",
+            "value": "abc",
+        }
     }],
-    "advanced": [],
+    "advanced": [{
+        "index": 1,
+        "name": "Mary had a little lamb",
+        "info": {
+            "type": "word",
+            "value": "Mary had a little lamb",
+        }
+    }],
     "expert": []
 }

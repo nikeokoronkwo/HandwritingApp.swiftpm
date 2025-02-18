@@ -8,22 +8,13 @@
 import PencilKit
 import SwiftUI
 
-class WritingController: ObservableObject {
-    @Published var drawing: PKDrawing?
-    @Published var imgData: Data?
-
-    init(drawing: PKDrawing? = nil, img: Data? = nil) {
-        self.drawing = drawing
-        self.imgData = img
-    }
-}
 
 struct WorkbookWritingView: View {
     @Bindable var workBook: Workbook
 
     @StateObject var writingController: WritingController = WritingController()
 
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) var dismiss
 
     init(workBook: Workbook) {
         self.workBook = workBook
@@ -53,7 +44,7 @@ struct WorkbookWritingView: View {
                             }
 
                             // go back
-                            presentationMode.wrappedValue.dismiss()
+                            dismiss()
                         } label: {
                             Label {
                                 Text("Go Back")

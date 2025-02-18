@@ -51,21 +51,21 @@ struct WorkbookView: View {
         }
         // TODO: Implement Searching
         .searchable(text: $searchTerm)
-        .toolbar(content: {
+        .toolbar {
             ToolbarItemGroup(placement: .topBarLeading) {
                 NavigationLink(value: NewWorkbook(name: "Untitled")) {
                     Image(systemName: "plus")
                 }
             }
-        })
-
-        //        .navigationDestination(for: Workbook.self) { wb in
-        //            WorkbookWritingView(workBook: wb)
-        //        }
+        }
+        .task {
+            debugPrint(workbooks)
+        }
     }
 }
 
 struct WorkbookItemView: View {
+    @Environment(\.modelContext) var modelContext
     @Environment(\.colorScheme) var colorScheme
     var book: Workbook
 
@@ -108,6 +108,13 @@ struct WorkbookItemView: View {
                     }
                     .padding(10)
                 }
+        }
+        .contextMenu {
+            Button(role: .destructive) {
+                modelContext.delete(book)
+            } label: {
+                Text("Remove")
+            }
         }
     }
 }

@@ -22,7 +22,7 @@ class WritingManager: ObservableObject {
 
     //
 
-    @Published var selectedTool: WritingSelection = .eraser
+    @Published var selectedTool: WritingSelection = .pen
     @Published var penOptions: WritingPenOptions = .init()
     @Published var eraserOptions: WritingEraserOptions = .init()
 

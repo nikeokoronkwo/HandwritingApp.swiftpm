@@ -17,7 +17,6 @@ protocol WritingCanvasRepresentable: View {
     var canvasView: PKCanvasView { get }
 }
 
-
 struct WritingView: WritingCanvasRepresentable {
     @Environment(\.undoManager) private var undoManager
     @StateObject var writingModel: WritingManager = WritingManager()

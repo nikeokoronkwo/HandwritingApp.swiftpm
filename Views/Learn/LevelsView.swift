@@ -22,11 +22,11 @@ struct LevelsView: View {
 
     var type: LevelType
     @Binding var levels: Levels
-    
+
     init(type: LevelType, levels: Binding<Levels>) {
         self.type = type
         self._levels = levels
-        
+
         debugPrint(levels)
     }
 
@@ -50,20 +50,20 @@ struct LevelsView: View {
                 spacing: gridVSpacing
             ) {
                 ForEach(levels, id: \.index) { level in
-                        NavigationLink {
-                            // TODO: Pass data down to handwriting view
-                            //                            HandWritingView()
-                        } label: {
-                            VStack {
-                                RoundedRectangle(cornerRadius: 10)
-                                    .fill(Color.white)
-                                    .frame(width: gridItemSize, height: gridItemSize)
-                                    .shadow(radius: 4)
-                                Text(level.name)
-                                    .foregroundColor(.primary)
-                            }
+                    NavigationLink {
+                        // TODO: Pass data down to handwriting view
+                        //                            HandWritingView()
+                    } label: {
+                        VStack {
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(Color.white)
+                                .frame(width: gridItemSize, height: gridItemSize)
+                                .shadow(radius: 4)
+                            Text(level.name)
+                                .foregroundColor(.primary)
                         }
                     }
+                }
             }
             .padding()
         }

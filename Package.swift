@@ -41,7 +41,7 @@ let package = Package(
             path: ".",
             resources: [
                 .process("Data/Assets"),
-                .process("./Fonts")
+                .process("./Fonts"),
             ]
         )
     ],

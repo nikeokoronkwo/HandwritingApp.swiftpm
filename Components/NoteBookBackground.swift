@@ -41,7 +41,7 @@ struct NoteBookWithTextBackground<V: View>: View {
     var lines: Int
     let lineWidth: CGFloat = 2
     var view: V
-    
+
     init(spacing: CGFloat, lines: Int, @ViewBuilder _ view: () -> V) {
         self.view = view()
         self.spacing = spacing
@@ -55,7 +55,7 @@ struct NoteBookWithTextBackground<V: View>: View {
     var LinesView: some View {
         VStack {
             LazyVStack(spacing: spacing) {
-                ForEach((1...(lines/2)).reversed(), id: \.self) { _ in
+                ForEach((1...(lines / 2)).reversed(), id: \.self) { _ in
                     Rectangle()
                         .fill(.cyan)
                         .frame(height: lineWidth)
@@ -64,7 +64,7 @@ struct NoteBookWithTextBackground<V: View>: View {
             view
                 .frame(height: spacing, alignment: .top)
             LazyVStack(spacing: spacing) {
-                ForEach(((lines/2) + 1)...lines, id: \.self) { _ in
+                ForEach(((lines / 2) + 1)...lines, id: \.self) { _ in
                     Rectangle()
                         .fill(.cyan)
                         .frame(height: lineWidth)
@@ -72,7 +72,7 @@ struct NoteBookWithTextBackground<V: View>: View {
             }
         }
     }
-    
+
     var body: some View {
         LinesView
     }

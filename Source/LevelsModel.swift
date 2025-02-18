@@ -7,13 +7,12 @@
 import SwiftUI
 
 class
-//struct
-    LevelsModel
-: ObservableObject
+    //struct
+    LevelsModel: ObservableObject
 {
-        @Published
+    @Published
     var jsonPath: URL?
-        @Published
+    @Published
     var assetPath: [String: URL]
 
     init(jsonPath: URL? = nil, assetPath: [String: URL] = [:]) {
@@ -26,7 +25,7 @@ class
             self._levelAssets = nil
         }
     }
-    
+
     private var assetsChanged: Bool = false
     private var _levelAssets: LevelsAsset?
     var levelAssets: LevelsAsset? {
@@ -40,9 +39,9 @@ class
         }
         set {
             _levelAssets = newValue
-            
+
             let data = try? JSONEncoder().encode(levelAssets)
-            
+
             if let url = jsonPath {
                 try? data?.write(to: url, options: [.atomic])
             }

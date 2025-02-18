@@ -8,7 +8,6 @@
 import PencilKit
 import SwiftUI
 
-
 struct WorkbookWritingView: View {
     @Bindable var workBook: Workbook
 

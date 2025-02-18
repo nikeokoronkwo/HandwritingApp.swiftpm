@@ -6,7 +6,7 @@ import SwiftUI
 struct MyApp: App {
     /// Whether the user has been onboarded
     @AppStorage("isOnboarded") var userIsOnboarded: Bool = true
-//    @State
+    //    @State
     @StateObject private var model: LevelsModel = .init()
 
     var modelContainer: ModelContainer = {
@@ -34,7 +34,7 @@ struct MyApp: App {
         //                                   WritingData.self)
         //        }
     }()
-    
+
     init() {
         RalewayDots.registerFonts()
     }
@@ -55,7 +55,7 @@ struct MyApp: App {
                             RealtimeWritingModel.self,
                             WritingModel.self,
                         ])
-//                        .environment(\.levelModel, model)
+                        //                        .environment(\.levelModel, model)
                         .environmentObject(model)
                     //                      .modelContainer(modelContainer)
 

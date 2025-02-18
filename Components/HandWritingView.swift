@@ -5,8 +5,8 @@
 //  Created by Nikechukwu Okoronkwo on 01/02/2025.
 //
 
-import SwiftUI
 import PencilKit
+import SwiftUI
 
 struct HandWritingView: View {
     /// The writing model for the given view, if any
@@ -17,7 +17,7 @@ struct HandWritingView: View {
     init(model: WritingModel) {
         self.model = model
         self.model.updated = Date()
-        
+
         if let data = model.result {
             let drawing = try? PKDrawing(data: data)
             self._writingController = StateObject(wrappedValue: WritingController(drawing: drawing))
@@ -55,7 +55,7 @@ struct CoreWritingView: WritingCanvasRepresentable {
         self.writingController = controller
 
         let canvasView = PKCanvasView()
-        
+
         self._canvasView = State(initialValue: canvasView)
         self.model = writingModel
 
@@ -67,7 +67,7 @@ struct CoreWritingView: WritingCanvasRepresentable {
                 ).pngData()
             }
         }
-        
+
     }
 
     var body: some View {
@@ -75,9 +75,12 @@ struct CoreWritingView: WritingCanvasRepresentable {
             GeometryReader { geometry in
                 ZStack {
                     NoteBookWithTextBackground(spacing: 150, lines: 4) {
-                        Image(model.data.image(model.data.count < 1 ? 200 : geometry.size.width * 0.123)!, scale: 1, label: Text(model.data))
+                        Image(
+                            model.data.image(
+                                model.data.count < 1 ? 200 : geometry.size.width * 0.123)!,
+                            scale: 1, label: Text(model.data))
                     }
-                    
+
                     WritingCanvas(
                         canvasView: Binding<PKCanvasView>(
                             get: {

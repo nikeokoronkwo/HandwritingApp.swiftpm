@@ -1,0 +1,33 @@
+name: Formatting Chore for App and Assets
+
+on:
+  # push:
+  #   branches: [ "main" ]
+  # pull_request:
+  #   branches: [ "main" ]
+  pull_request_target:
+    types:
+      - opened
+      - edited
+  workflow_dispatch:
+
+jobs:
+  format:
+
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Format Swift
+      run: swift format -i -r .
+    # TODO: Split into setup stage to search for all json files
+    - name: Format JSON
+      run: |
+        cat Data/Assets/levels.json | jq > tmp.json
+        cat tmp.json > Data/Assets/levels.json
+        rm tmp.json
+    - name: Commit Changes
+      uses: stefanzweifel/git-auto-commit-action@v5
+      with: 
+        commit_user_name: HW Bot
+        commit_message: "Chore: Auto-Format Files"

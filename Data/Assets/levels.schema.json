@@ -1,0 +1,11 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "Levels Asset File",
+    "description": "The assets file used for storing data concerning the handwriting levels the user will perform",
+    "type": "object",
+    "properties": {
+	"basic": {},
+	"advanced": {},
+	"expert": {}
+    }
+}

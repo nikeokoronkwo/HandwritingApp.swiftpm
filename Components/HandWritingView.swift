@@ -12,7 +12,11 @@ struct HandWritingView: View {
     /// The writing model for the given view, if any
     /// Used for populating existing data
     @Bindable var model: WritingModel
-    @StateObject var writingController: WritingController = WritingController()
+    
+    /// The controller used for controlling, getting data from the ``WritingCanvas``
+    @StateObject var writingController: WritingController = WritingController { drawing in
+        
+    }
 
     init(model: WritingModel) {
         self.model = model
@@ -20,9 +24,11 @@ struct HandWritingView: View {
 
         if let data = model.result {
             let drawing = try? PKDrawing(data: data)
-            self._writingController = StateObject(wrappedValue: WritingController(drawing: drawing))
+            self._writingController = StateObject(wrappedValue: WritingController(drawing: drawing)  { drawing in
+            })
         } else {
-            self._writingController = StateObject(wrappedValue: WritingController())
+            self._writingController = StateObject(wrappedValue: WritingController  { drawing in
+            })
         }
     }
 
@@ -46,25 +52,36 @@ struct HandWritingView: View {
 
 struct CoreWritingView: WritingCanvasRepresentable {
     @Environment(\.undoManager) private var undoManager
+    /// The writing manager, used for the toolbar and toolset for configuring the ``WritingCanvas``
     @StateObject var writingModel: WritingManager = WritingManager()
+    /// The controller used for controlling, getting data from the ``WritingCanvas``
     @ObservedObject var writingController: WritingController
+    
+    /// The canvas that the ``WritingCanvas`` and ``ToolBarComponent`` are bound to
     @State var canvasView = PKCanvasView()
+    
+    /// The writing model for the given view
+    /// Used for populating existing data, and to save the data associated with the given view
     @Bindable var model: WritingModel
+    
+    /// The model context used for saving realtime data context on a given user
+    
 
-    init(_ controller: WritingController, model writingModel: WritingModel) {
-        self.writingController = controller
-
+    init(_ writingModel: WritingModel) {
         let canvasView = PKCanvasView()
 
         self._canvasView = State(initialValue: canvasView)
         self.model = writingModel
 
-        if let drawing = controller.drawing {
-            canvasView.drawing = drawing
-            if controller.imgData == nil {
-                self.writingController.imgData = controller.drawing?.image(
-                    from: canvasView.bounds, scale: 1.0
-                ).pngData()
+        if let data = writingModel.result {
+            let dwg = try! PKDrawing(data: data)
+            canvasView.drawing = dwg
+            self.writingController = WritingController(dwg) { drawing in
+                // handle drawing
+            }
+        } else {
+            self.writingController = WritingController { drawing in
+                // handle drawing
             }
         }
 
@@ -76,7 +93,7 @@ struct CoreWritingView: WritingCanvasRepresentable {
                 ZStack {
                     NoteBookWithTextBackground(spacing: 150, lines: 4) {
                         Image(
-                            model.data.image(
+                            model.data.dotted_image(
                                 model.data.count < 1 ? 200 : geometry.size.width * 0.123)!,
                             scale: 1, label: Text(model.data))
                     }
@@ -110,13 +127,16 @@ struct CoreWritingView: WritingCanvasRepresentable {
 }
 
 #Preview {
-    let controller = WritingController()
-    let model = WritingModel(updated: Date(), score: 30, core: false, data: "moin moin")
-    CoreWritingView(controller, model: model)
+    let model = WritingModel(updated: Date(), score: 0, core: false, data: "moin moin")
+    CoreWritingView(model)
 }
 
 #Preview {
-    let controller = WritingController()
-    let model = WritingModel(updated: Date(), score: 30, core: false, data: "drinking\nwater")
-    CoreWritingView(controller, model: model)
+    let model = WritingModel(updated: Date(), score: 70, core: false, data: "drinking\nwater")
+    CoreWritingView(model)
+}
+
+#Preview {
+    let model = WritingModel(updated: Date(), score: 30, core: false, data: "mary had a lamb,\na fast lamb like...")
+    CoreWritingView(model)
 }

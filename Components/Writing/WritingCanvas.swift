@@ -17,9 +17,9 @@ class PKCanvasCoordinator: NSObject, PKCanvasViewDelegate {
 
     func canvasViewDrawingDidChange(_ canvasView: PKCanvasView) {
         writingController.drawing = canvasView.drawing
-        writingController.imgData = canvasView.drawing.image(from: UIScreen.main.bounds, scale: 1.0)
+        writingController.imgData = canvasView.drawing.image(from: canvasView.drawing.bounds, scale: 1.0)
             .pngData()
-
+        writingController.onDrawing(canvasView.drawing)
     }
 }
 

@@ -11,20 +11,26 @@ import SwiftUI
 struct WorkbookWritingView: View {
     @Bindable var workBook: Workbook
 
-    @StateObject var writingController: WritingController = WritingController()
+    @StateObject var writingController: WritingController
 
     @Environment(\.dismiss) var dismiss
 
     init(workBook: Workbook) {
-        self.workBook = workBook
-        self.workBook.lastAccessed = Date()
-
         if let d = workBook.data {
             let drawing = try? PKDrawing(data: d)
-            self._writingController = StateObject(wrappedValue: WritingController(drawing: drawing))
+            self._writingController = StateObject(wrappedValue: WritingController(drawing: drawing) {
+                drawing in
+                // do absolutely nothing
+            })
         } else {
-            self._writingController = StateObject(wrappedValue: WritingController())
+            self._writingController = StateObject(wrappedValue: WritingController {
+                drawing in
+                // do absolutely nothing
+            })
         }
+        
+        self.workBook = workBook
+        self.workBook.lastAccessed = Date()
     }
 
     var body: some View {

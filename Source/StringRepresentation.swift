@@ -7,17 +7,37 @@
 
 import SwiftUI
 
+@MainActor fileprivate func renderTextImage(_ str: String, font: String, size: CGFloat) -> CGImage? {
+    let renderer = ImageRenderer(
+        content: Text(str)
+            .font(Font.custom(font, size: size))
+            .fixedSize(horizontal: false, vertical: true)
+            .lineLimit(nil)
+    )
+
+    return renderer.cgImage
+}
+
+@MainActor fileprivate func renderTextImage(_ str: AttributedString, font: String, size: CGFloat) -> CGImage? {
+    let renderer = ImageRenderer(
+        content: Text(str)
+            .font(Font.custom(font, size: size))
+            .fixedSize(horizontal: false, vertical: true)
+            .lineLimit(nil)
+    )
+
+    return renderer.cgImage
+}
+
 extension String {
 
     @MainActor func image(_ fontSize: CGFloat = 17) -> CGImage? {
-        let renderer = ImageRenderer(
-            content: Text(self)
-                .font(Font.custom("RalewayDots-Regular", size: fontSize))
-                .fixedSize(horizontal: false, vertical: true)
-                .lineLimit(nil)
-        )
+        return renderTextImage(self, font: "Raleway-Thin", size: fontSize)
 
-        return renderer.cgImage
+    }
+    
+    @MainActor func dotted_image(_ fontSize: CGFloat = 17) -> CGImage? {
+        return renderTextImage(self, font: "RalewayDots-Regular", size: fontSize)
 
     }
 
@@ -25,14 +45,12 @@ extension String {
 
 extension AttributedString {
     @MainActor func image(_ fontSize: CGFloat = 17) -> CGImage? {
-        let renderer = ImageRenderer(
-            content: Text(self)
-                .font(Font.custom("RalewayDots-Regular", size: fontSize))
-                .fixedSize(horizontal: false, vertical: true)
-                .lineLimit(nil)
-        )
+        return renderTextImage(self, font: "Raleway-Thin", size: fontSize)
 
-        return renderer.cgImage
+    }
+    
+    @MainActor func dotted_image(_ fontSize: CGFloat = 17) -> CGImage? {
+        return renderTextImage(self, font: "RalewayDots-Regular", size: fontSize)
 
     }
 }
@@ -42,14 +60,14 @@ struct StringExtPreview: View {
     var size: CGFloat
 
     init(_ text: String, size: CGFloat = 17) {
-        RalewayDots.registerFonts()
+        Raleway.registerFonts()
         self.text = text
         self.size = size
     }
 
     var body: some View {
         VStack {
-            if let img = text.image(size) {
+            if let img = text.dotted_image(size) {
                 Image(img, scale: 2, label: Text("f"))
             } else {
                 Text("E no work")
@@ -63,7 +81,7 @@ struct AttributedStringExtPreview: View {
     var size: CGFloat
 
     init(_ text: AttributedString, size: CGFloat = 17) {
-        RalewayDots.registerFonts()
+        Raleway.registerFonts()
         self.text = text
         self.size = size
     }

@@ -94,6 +94,6 @@ struct NoteBookWithTextBackground<V: View>: View {
 
 #Preview("NoteBook With Special Text") {
     NoteBookWithTextBackground(spacing: 150, lines: 4) {
-        Image("Foobar".image(160)!, scale: 1, label: Text("Foobar"))
+        Image("Foobar".dotted_image(160)!, scale: 1, label: Text("Foobar"))
     }
 }

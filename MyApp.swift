@@ -36,7 +36,7 @@ struct MyApp: App {
     }()
 
     init() {
-        RalewayDots.registerFonts()
+        Raleway.registerFonts()
     }
 
     /// The Main View one goes to once the application is opened

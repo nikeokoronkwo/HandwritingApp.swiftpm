@@ -44,6 +44,11 @@ let package = Package(
                 .process("./Fonts"),
             ]
         )
+//        .testTarget(
+//            name: "AppModuleTests",
+//            dependencies: ["AppModule"],
+//            path: "Tests"
+//        )
     ],
     swiftLanguageVersions: [.version("6")]
 )

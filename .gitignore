@@ -3,3 +3,6 @@ _temp
 
 # Ignore resolved file
 Package.resolved
+
+# DocC 
+.docc-build

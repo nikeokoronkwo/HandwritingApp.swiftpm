@@ -17,7 +17,16 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Build
+    - name: Setup Python
+      uses: actions/setup-python@v5.4.0
+    - name: Install JSON Package
+      run: |
+        # pip install jsonschema'[format]'
+        pipx install check-jsonschema
+    # - name: Validate JSON
+    #   run: check-jsonschema --schemafile levels.schema.json levels.json
+    #   working-directory: ./Data/Assets
+    - name: Build App
       run: swift build -v
-    - name: Run tests
+    - name: Run tests on app
       run: swift test -v

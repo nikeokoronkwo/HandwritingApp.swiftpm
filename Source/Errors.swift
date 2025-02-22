@@ -12,3 +12,9 @@ public enum AssetError: Error {
     case unknown
     case custom(Error)
 }
+
+public enum ImageError: Error {
+    case invalidInput
+    case unknown
+    case bad(String)
+}

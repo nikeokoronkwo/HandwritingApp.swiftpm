@@ -18,17 +18,19 @@ struct WorkbookWritingView: View {
     init(workBook: Workbook) {
         if let d = workBook.data {
             let drawing = try? PKDrawing(data: d)
-            self._writingController = StateObject(wrappedValue: WritingController(drawing: drawing) {
-                drawing in
-                // do absolutely nothing
-            })
+            self._writingController = StateObject(
+                wrappedValue: WritingController(drawing: drawing) {
+                    drawing in
+                    // do absolutely nothing
+                })
         } else {
-            self._writingController = StateObject(wrappedValue: WritingController {
-                drawing in
-                // do absolutely nothing
-            })
+            self._writingController = StateObject(
+                wrappedValue: WritingController {
+                    drawing in
+                    // do absolutely nothing
+                })
         }
-        
+
         self.workBook = workBook
         self.workBook.lastAccessed = Date()
     }
@@ -41,13 +43,13 @@ struct WorkbookWritingView: View {
                     ToolbarItem(placement: .topBarLeading) {
                         Button {
                             debugPrint(writingController.drawing)
-
+                            
                             // save data
                             if let d = writingController.drawing {
                                 workBook.data = d.dataRepresentation()
                                 workBook.imgData = writingController.imgData
                             }
-
+                            
                             // go back
                             dismiss()
                         } label: {

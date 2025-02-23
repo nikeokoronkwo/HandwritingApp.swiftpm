@@ -48,6 +48,15 @@ struct Level: Codable {
     var info: LevelInfo
 }
 
+extension Level.LevelInfo: Equatable, Hashable {}
+
+extension Level: Equatable, Hashable {
+    static func == (lhs: Level, rhs: Level) -> Bool {
+        return lhs.index == rhs.index && lhs.name == rhs.name && lhs.info == rhs.info
+    }
+}
+
+/// Simple Levels typealias
 typealias Levels = [Level]
 
 /// A data type to represent the JSON file used for initialising the levels for the application when initially installed

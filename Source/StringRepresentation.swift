@@ -7,18 +7,21 @@
 
 import SwiftUI
 
-@MainActor fileprivate func renderTextImage(_ str: String, font: String, size: CGFloat) -> CGImage? {
+@MainActor private func renderTextImage(_ str: String, font: String, size: CGFloat) -> CGImage? {
     let renderer = ImageRenderer(
         content: Text(str)
             .font(Font.custom(font, size: size))
             .fixedSize(horizontal: false, vertical: true)
             .lineLimit(nil)
+
     )
 
     return renderer.cgImage
 }
 
-@MainActor fileprivate func renderTextImage(_ str: AttributedString, font: String, size: CGFloat) -> CGImage? {
+@MainActor private func renderTextImage(_ str: AttributedString, font: String, size: CGFloat)
+    -> CGImage?
+{
     let renderer = ImageRenderer(
         content: Text(str)
             .font(Font.custom(font, size: size))
@@ -35,7 +38,7 @@ extension String {
         return renderTextImage(self, font: "Raleway-Thin", size: fontSize)
 
     }
-    
+
     @MainActor func dotted_image(_ fontSize: CGFloat = 17) -> CGImage? {
         return renderTextImage(self, font: "RalewayDots-Regular", size: fontSize)
 
@@ -48,7 +51,7 @@ extension AttributedString {
         return renderTextImage(self, font: "Raleway-Thin", size: fontSize)
 
     }
-    
+
     @MainActor func dotted_image(_ fontSize: CGFloat = 17) -> CGImage? {
         return renderTextImage(self, font: "RalewayDots-Regular", size: fontSize)
 

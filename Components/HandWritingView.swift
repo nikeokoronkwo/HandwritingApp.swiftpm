@@ -6,16 +6,17 @@
 //
 
 import PencilKit
+import SwiftData
 import SwiftUI
 
 struct HandWritingView: View {
     /// The writing model for the given view, if any
     /// Used for populating existing data
     @Bindable var model: WritingModel
-    
+
     /// The controller used for controlling, getting data from the ``WritingCanvas``
     @StateObject var writingController: WritingController = WritingController { drawing in
-        
+
     }
 
     init(model: WritingModel) {
@@ -24,11 +25,13 @@ struct HandWritingView: View {
 
         if let data = model.result {
             let drawing = try? PKDrawing(data: data)
-            self._writingController = StateObject(wrappedValue: WritingController(drawing: drawing)  { drawing in
-            })
+            self._writingController = StateObject(
+                wrappedValue: WritingController(drawing: drawing) { drawing in
+                })
         } else {
-            self._writingController = StateObject(wrappedValue: WritingController  { drawing in
-            })
+            self._writingController = StateObject(
+                wrappedValue: WritingController { drawing in
+                })
         }
     }
 
@@ -50,52 +53,175 @@ struct HandWritingView: View {
     }
 }
 
+private func learnPredicate() -> Predicate<WritingModel> {
+    return #Predicate<WritingModel> { model in
+        model.core
+    }
+}
+
 struct CoreWritingView: WritingCanvasRepresentable {
+    /// The writing models for the given view
+    /// Used for populating existing data, and to save the data associated with the given view
+    @Query(filter: learnPredicate(), sort: \.updated) private var levelInfo: [WritingModel]
+
     @Environment(\.undoManager) private var undoManager
+    @Environment(\.modelContext) private var modelContext
+
+    @Environment(\.colorScheme) private var colorScheme
+
+    @EnvironmentObject private var levelModel: LevelsModel
     /// The writing manager, used for the toolbar and toolset for configuring the ``WritingCanvas``
     @StateObject var writingModel: WritingManager = WritingManager()
     /// The controller used for controlling, getting data from the ``WritingCanvas``
     @ObservedObject var writingController: WritingController
-    
+
     /// The canvas that the ``WritingCanvas`` and ``ToolBarComponent`` are bound to
     @State var canvasView = PKCanvasView()
-    
-    /// The writing model for the given view
-    /// Used for populating existing data, and to save the data associated with the given view
-    @Bindable var model: WritingModel
-    
-    /// The model context used for saving realtime data context on a given user
-    
 
-    init(_ writingModel: WritingModel) {
-        let canvasView = PKCanvasView()
+    /// Whether the user has interacted with the view, to know if he can nav or not
+    @State var hasInteracted: Bool = false
 
-        self._canvasView = State(initialValue: canvasView)
-        self.model = writingModel
+    @State var levelIndex: Int
+    
+    /// The current model in focus here
+    @State var currentModel: WritingModel?
+    @State private var newModel: Bool = false
 
-        if let data = writingModel.result {
-            let dwg = try! PKDrawing(data: data)
-            canvasView.drawing = dwg
-            self.writingController = WritingController(dwg) { drawing in
-                // handle drawing
+    var levelType: LevelType
+    
+    fileprivate func getCGImg() -> CGImage? {
+        let drawing = canvasView.drawing
+        
+        let img = drawing.image(from: CGRect(x: 0, y: 0, width: targetImageForLevel.width, height: targetImageForLevel.height), scale: 1)
+        
+        guard let cgImg = convertUIImageToCGImage(input: img) else { return nil }
+        
+        return cgImg
+    }
+    
+    @State private(set) var index: Float? = nil
+
+    var level: Level {
+        levelModel.levelAssets.forType(levelType).first(where: { l in
+            l.index == levelIndex
+        })!
+    }
+
+    var imageForLevel: CGImage {
+        level.info.value.dotted_image(
+            level.info.value.count < 15 ? 150 : UIScreen.main.bounds.width * 0.123)!
+    }
+    
+    var targetImageForLevel: CGImage {
+        level.info.value.image(
+            level.info.value.count < 15 ? 150 : UIScreen.main.bounds.width * 0.123)!
+    }
+
+    func logOnExit() {
+        if newModel {
+            modelContext.insert(currentModel!)
+            debugPrint("insert")
+            try! modelContext.save()
+            newModel = false
+        }
+    }
+
+    // runs whenever navigating to the next drawing
+    func updateCanvas() {
+        prepareCanvas(update: true)
+    }
+    
+    private func prepareCanvas(update: Bool = false) {
+        
+        if levelInfo.isEmpty
+            || levelInfo.filter({ mdl in
+                mdl.title == level.name
+            }).isEmpty
+        {
+            newModel = true
+            currentModel = WritingModel(level, updated: Date.now, score: 0)
+            if update {
+                canvasView.drawing = PKDrawing()
             }
         } else {
-            self.writingController = WritingController { drawing in
-                // handle drawing
+            if let mdl = levelInfo.filter({ mdl in
+                mdl.result != nil && mdl.title == level.name
+            }).first {
+                currentModel = mdl
+                let dwg = try! PKDrawing(data: mdl.result!)
+                canvasView.drawing = dwg
+                writingController.drawing = dwg
+            } else {
+                currentModel = levelInfo.filter({ mdl in
+                    mdl.title == level.name
+                }).first
+                if update {
+                    canvasView.drawing = PKDrawing()
+                }
             }
+        }
+    }
+
+    func setupCanvas() {
+        prepareCanvas()
+        
+        writingController.onDrawing = { drawing in
+            debugPrint(currentModel, newModel, levelInfo)
+            
+            currentModel?.result = drawing.dataRepresentation()
+            currentModel?.updated = Date.now
+            
+            if !hasInteracted { hasInteracted = true }
+
+            guard let cgImg = getCGImg() else { return }
+            
+            do {
+                index = try ssim(targetImageForLevel, cgImg)
+            } catch {
+                debugPrint(error)
+                return
+            }
+        }
+    }
+
+    //    @Bindable var model: WritingModel
+
+    /// The model context used for saving realtime data context on a given user
+    ///
+
+    init(_ levelIndex: Int, forType type: LevelType, title: String) {
+        self.levelType = type
+        // select level from id
+        self._levelIndex = State<Int>(initialValue: levelIndex)
+
+        let canvasView = PKCanvasView()
+
+        self._canvasView = State<PKCanvasView>(initialValue: canvasView)
+
+        self.writingController = WritingController { dwg in
+            // run task
         }
 
     }
-
+    
     var body: some View {
         ZStack(alignment: .bottom) {
             GeometryReader { geometry in
                 ZStack {
                     NoteBookWithTextBackground(spacing: 150, lines: 4) {
-                        Image(
-                            model.data.dotted_image(
-                                model.data.count < 1 ? 200 : geometry.size.width * 0.123)!,
-                            scale: 1, label: Text(model.data))
+                        if colorScheme == .dark {
+                            Image(
+                                imageForLevel,
+                                scale: 1, label: Text(level.name)
+                            )
+                            .colorInvert()
+                        } else {
+                            Image(
+                                imageForLevel,
+                                scale: 1, label: Text(level.name)
+                            )
+                            .colorInvert()
+                        }
                     }
 
                     WritingCanvas(
@@ -114,29 +240,102 @@ struct CoreWritingView: WritingCanvasRepresentable {
             }
             // iOS 17.5
             // The toolbar
-            ToolBarComponent(canvasView: $canvasView)
+            VStack {
+                ToolBarComponent(canvasView: $canvasView)
+//                Text("\(index ?? -1)")
+            }
+            if hasInteracted {
+                VStack {
+                    Spacer()
+                    HStack {
+                        if levelIndex > 1 {
+                            Button {
+                                levelIndex -= 1
+                            } label: {
+                                RoundedRectangle(cornerRadius: 5)
+                                    .frame(width: 70, height: 60)
+                                    .opacity(0)
+                                    .overlay {
+                                        Image(systemName: "chevron.left")
+                                            .font(.system(size: 40))
+                                    }
+                            }
+                        }
+                        Spacer()
+                        if levelModel.levelAssets.forType(levelType).firstIndex(of: level)! < levelModel.levelAssets.forType(levelType).count - 1 {
+                            Button {
+                                levelIndex += 1
+
+                            } label: {
+                                RoundedRectangle(cornerRadius: 5)
+                                    .frame(width: 70, height: 60)
+                                    .opacity(0)
+                                    .overlay {
+                                        Image(systemName: "chevron.right")
+                                            .font(.system(size: 40))
+                                    }
+                            }
+                        }
+                        
+                    }
+//                    .frame(height: .infinity)
+                        .padding(.horizontal, 20)
+                        .background(content: {
+                            Rectangle()
+                                .opacity(0)
+                    })
+                    Spacer()
+                }
+            }
         }
+        .onAppear {
+            if (currentModel == nil) {
+                setupCanvas()
+            }
+        }
+        .onChange(
+            of: levelIndex,
+            { oldValue, newValue in
+                print("\n\n")
+                logOnExit()
+                debugPrint("logonexit")
+                updateCanvas()
+            }
+        )
         .environmentObject(writingModel)
         .environmentObject(writingController)
     }
 }
 
 #Preview("Practice HW View") {
-    let model = WritingModel(updated: Date(), score: 30, core: false, data: "my hands")
-    HandWritingView(model: model)
+    EnvironmentObjectViewContainer { model in
+        CoreWritingView(1, forType: .basic, title: model.levelAssets.forType(.basic).first(where: { l in
+            l.index == 1
+        })!.name)
+    }
+    .preferredColorScheme(.light)
 }
 
-#Preview {
-    let model = WritingModel(updated: Date(), score: 0, core: false, data: "moin moin")
-    CoreWritingView(model)
-}
-
-#Preview {
-    let model = WritingModel(updated: Date(), score: 70, core: false, data: "drinking\nwater")
-    CoreWritingView(model)
-}
-
-#Preview {
-    let model = WritingModel(updated: Date(), score: 30, core: false, data: "mary had a lamb,\na fast lamb like...")
-    CoreWritingView(model)
-}
+//#Preview {
+//    let level = Level(
+//        index: 0, name: "moin moin", info: Level.LevelInfo(type: .word, value: "moin moin"))
+//    let model = WritingModel(level, updated: Date.now, score: 0)
+//    CoreWritingView(model, level: level)
+//}
+//
+//#Preview {
+//    let level = Level(
+//        index: 0, name: "Drinking Water",
+//        info: Level.LevelInfo(type: .word, value: "drinking\nwater"))
+//    let model = WritingModel(level, updated: Date.now, score: 0)
+//    CoreWritingView(model, level: level)
+//}
+//
+//#Preview {
+//    let level = Level(
+//        index: 0, name: "Mary",
+//        info: Level.LevelInfo(type: .word, value: "mary had a lamb,\na fast lamb like..."))
+//    let model = WritingModel(level, updated: Date.now, score: 0)
+//    CoreWritingView(model, level: level)
+//        .preferredColorScheme(.dark)
+//}

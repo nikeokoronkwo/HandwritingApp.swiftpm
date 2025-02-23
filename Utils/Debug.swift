@@ -7,7 +7,7 @@
 
 //struct Logger {
 //    var name: String
-//    
+//
 //    func print(_ items: Any...) {
 //        debugPrint("\(name)", ...items)
 //    }

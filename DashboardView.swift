@@ -1,3 +1,4 @@
+import SwiftData
 import SwiftUI
 
 /// The dashboard view, which contains most of the stuff that the user will interact with.
@@ -65,6 +66,14 @@ struct DashboardView: View {
                 .navigationDestination(for: WritingModel.self) { mdl in
                     HandWritingView(model: mdl)
                 }
+                .navigationDestination(for: LevelType.self, destination: { type in
+                    LevelsView(type: type)
+                })
+                .navigationDestination(
+                    for: LevelNavModel.self,
+                    destination: { levelNavModel in
+                        CoreWritingView(levelNavModel.levelIndex, forType: levelNavModel.levelType, title: levelNavModel.title)
+                    })
                 .navigationDestination(for: NewPractice.self) { new in
                     // make new practice
                     let newModel = WritingModel(

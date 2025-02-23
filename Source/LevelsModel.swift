@@ -28,14 +28,19 @@ class
 
     private var assetsChanged: Bool = false
     private var _levelAssets: LevelsAsset?
-    var levelAssets: LevelsAsset? {
+    var levelAssets: LevelsAsset {
         get {
             if _levelAssets == nil {
                 if let p = jsonPath {
-                    self._levelAssets = try? loadAssets(url: p)
+                    do {
+                        self._levelAssets = try loadAssets(url: p)
+                    } catch {
+                        debugPrint(error)
+                        return LevelsAsset(basic: [], advanced: [], expert: [])
+                    }
                 }
             }
-            return _levelAssets
+            return _levelAssets!
         }
         set {
             _levelAssets = newValue

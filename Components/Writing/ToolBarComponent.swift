@@ -172,10 +172,8 @@ struct ToolBarComponent: View {
         VStack(alignment: .center) {
             Slider(
                 value: $writingModel.penOptions.inkWidth,
-                in: 1...15
-            ) {
-
-            }
+                in: (1.5)...6
+            )
             .frame(width: 175)
             Spacer()
             Circle()
@@ -194,7 +192,7 @@ struct ToolBarComponent: View {
                     bottomImage: "eraser"
                 )
             )
-            .onChange(of: writingModel.toggleIsOn) { newValue in
+            .onChange(of: writingModel.toggleIsOn) { oldValue, newValue in
                 updateCanvasTool()
             }
 

@@ -44,14 +44,14 @@ class WritingManager: ObservableObject {
 
     /// Options for configuring the pen options
     struct WritingPenOptions {
-        var inkWidth: CGFloat = 5
+        var inkWidth: CGFloat
         var inkColour: Color = .black
 
         init() {
             if #available(iOS 17, *) {
-                inkWidth = 5
+                inkWidth = 2.5
             } else {
-                inkWidth = 12
+                inkWidth = 6
             }
         }
     }

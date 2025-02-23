@@ -17,3 +17,12 @@ func ImageFromData(_ data: Data) -> Image {
     //        #else
     #endif
 }
+
+func convertUIImageToCGImage(input: UIImage) -> CGImage! {
+    guard var ciImage = CIImage(image: input) else {
+        return nil
+    }
+    
+    let context = CIContext(options: nil)
+    return context.createCGImage(ciImage, from: ciImage.extent)
+}

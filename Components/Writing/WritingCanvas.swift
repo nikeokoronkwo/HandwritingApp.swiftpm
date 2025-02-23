@@ -17,8 +17,10 @@ class PKCanvasCoordinator: NSObject, PKCanvasViewDelegate {
 
     func canvasViewDrawingDidChange(_ canvasView: PKCanvasView) {
         writingController.drawing = canvasView.drawing
-        writingController.imgData = canvasView.drawing.image(from: canvasView.drawing.bounds, scale: 1.0)
-            .pngData()
+        writingController.imgData = canvasView.drawing.image(
+            from: canvasView.drawing.bounds, scale: 1.0
+        )
+        .pngData()
         writingController.onDrawing(canvasView.drawing)
     }
 }
@@ -37,22 +39,12 @@ struct WritingCanvas: UIViewRepresentable {
         case .eraser:
             let eraserType: PKEraserTool.EraserType =
                 writingModel.eraserOptions.eraserType == .pixel ? .bitmap : .vector
-            if #available(iOS 16.4, *) {
-                canvasView.tool = PKEraserTool(
-                    eraserType, width: writingModel.eraserOptions.eraserWidth)
-            } else {
-                canvasView.tool = PKEraserTool(eraserType)
-            }
+            canvasView.tool = PKEraserTool(
+                eraserType, width: writingModel.eraserOptions.eraserWidth)
         case .pen:
-            if #available(iOS 17, *) {
-                canvasView.tool = PKInkingTool(
-                    .monoline, color: UIColor(writingModel.penOptions.inkColour),
-                    width: writingModel.penOptions.inkWidth)
-            } else {
-                canvasView.tool = PKInkingTool(
-                    .pen, color: UIColor(writingModel.penOptions.inkColour),
-                    width: writingModel.penOptions.inkWidth)
-            }
+            canvasView.tool = PKInkingTool(
+                .monoline, color: UIColor(writingModel.penOptions.inkColour),
+                width: writingModel.penOptions.inkWidth)
         }
     }
 

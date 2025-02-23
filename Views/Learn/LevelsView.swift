@@ -8,26 +8,23 @@
 import SwiftData
 import SwiftUI
 
-private func learnPredicate() -> Predicate<WritingModel> {
-    return #Predicate<WritingModel> { model in
-        model.core
-    }
+struct LevelNavModel: Hashable {
+    var levelIndex: Int
+    var levelHash: Int
+    var levelType: LevelType
+    var title: String
 }
 
 struct LevelsView: View {
-    @Query(filter: learnPredicate(), sort: \.updated) var levelInfo: [WritingModel]
+    @EnvironmentObject var levelModel: LevelsModel
 
     /// Search Term for searching up a workbook
     @State private var searchTerm: String = ""
 
     var type: LevelType
-    @Binding var levels: Levels
 
-    init(type: LevelType, levels: Binding<Levels>) {
+    init(type: LevelType) {
         self.type = type
-        self._levels = levels
-
-        debugPrint(levels)
     }
 
     private let gridVSpacing: CGFloat = 40
@@ -49,26 +46,36 @@ struct LevelsView: View {
                 alignment: .center,
                 spacing: gridVSpacing
             ) {
-                ForEach(levels, id: \.index) { level in
-                    NavigationLink {
-                        // TODO: Pass data down to handwriting view
-                        //                            HandWritingView()
-                    } label: {
-                        VStack {
-                            RoundedRectangle(cornerRadius: 10)
-                                .fill(Color.white)
-                                .frame(width: gridItemSize, height: gridItemSize)
-                                .shadow(radius: 4)
-                            Text(level.name)
-                                .foregroundColor(.primary)
+                let levels = levelModel.levelAssets.forType(type)
+                if !levels.isEmpty {
+                    ForEach(levels, id: \.index) { level in
+                        NavigationLink(
+                            value:
+                                //                        CoreWritingView(
+                                LevelNavModel(
+                                    levelIndex: level.index,
+                                    levelHash: level.hashValue,
+                                    levelType: type,
+                                    title: level.name)
+                        ) {
+                            VStack {
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill(Color.white)
+                                    .frame(width: gridItemSize, height: gridItemSize)
+                                    .shadow(radius: 4)
+                                Text(level.name)
+                                    .foregroundColor(.primary)
+                            }
                         }
                     }
+                } else {
+                    Text("An error occured loading the levels. Please try again")
                 }
             }
             .padding()
         }
         // TODO: Implement Searching
-        .searchable(text: $searchTerm)
+        //        .searchable(text: $searchTerm)
     }
 }
 //

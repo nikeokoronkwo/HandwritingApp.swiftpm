@@ -44,7 +44,6 @@ extension LevelsAsset {
 
 struct LearnView: View {
     //    @Environment(\.levelModel)
-    @EnvironmentObject var levelModel: LevelsModel
 
     private var options: [LearnOption] = [
         LearnOption(
@@ -58,36 +57,10 @@ struct LearnView: View {
         ),
     ]
 
-    var cocoroocoo: Void {
-        debugPrint("LLLLLLLLELELELELELELELELE")
-        debugPrint(levelModel.levelAssets)
-    }
-
     var body: some View {
         TriangularLayout {
             ForEach(options, id: \.name) { opt in
-                NavigationLink {
-                    //                    if levelModel == nil {
-                    //                        Text("Loading...")
-                    //                    } else {
-                    // TODO: Levels needs to be passed data as binding variable
-                    let _ = cocoroocoo
-                    let levelBinding = Binding<Levels> {
-                        return levelModel.levelAssets?.forType(opt.levelType) ?? []
-                    } set: { new in
-                        switch opt.levelType {
-                        case .basic:
-                            levelModel.levelAssets?.basic = new
-                        case .advanced:
-                            levelModel.levelAssets?.advanced = new
-                        case .expert:
-                            levelModel.levelAssets?.expert = new
-                        }
-                    }
-
-                    LevelsView(type: opt.levelType, levels: levelBinding)
-                    //                    }
-                } label: {
+                NavigationLink(value: opt.levelType) {
                     VStack {
                         // TODO: Overlay incase man wanna continue from where he stopped
                         RoundedRectangle(cornerRadius: 10)

@@ -17,8 +17,6 @@ public struct Raleway {
             debugPrint("Couldn't create font")
             return
         }
-        
-        debugPrint(font)
 
         var error: Unmanaged<CFError>?
 

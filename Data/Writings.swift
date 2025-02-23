@@ -42,6 +42,14 @@ class WritingModel {
         self.result = result
         self.title = title
     }
+
+    init(_ level: Level, updated: Date, score: Float, result: Data? = nil) {
+        self.updated = updated
+        self.score = score
+        self.core = true
+        self.data = level.info.value
+        self.title = level.name
+    }
 }
 
 extension WritingModel {

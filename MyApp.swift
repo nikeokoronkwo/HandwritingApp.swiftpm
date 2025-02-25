@@ -101,9 +101,6 @@ struct MyApp: App {
                 return
             }
 
-            debugPrint(levelData)
-            debugPrint(levelDataAsJson)
-
             if levelDataAsJson.advanced.count == 0 || levelDataAsJson.basic.count == 0
                 || levelDataAsJson.expert.count == 0
             {
@@ -141,16 +138,11 @@ struct MyApp: App {
                         path: el.key)
                 }
 
-                debugPrint("+++++++++++++++++")
-                debugPrint(model)
-                debugPrint(model.assetPath)
-                debugPrint(model.jsonPath)
             }
 
         } catch {
             // handle errors
             debugPrint(error)
-            debugPrint("*****************")
             return
         }
     }

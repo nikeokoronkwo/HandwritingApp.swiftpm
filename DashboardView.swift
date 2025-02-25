@@ -94,19 +94,11 @@ struct DashboardView: View {
                     WorkbookWritingView(workBook: wb)
                 }
             }
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    #if targetEnvironment(simulator)
-                        Button {
-                            openStatsSheet = true
-                        } label: {
-                            Label("Stats", systemImage: "chart.bar")
-                        }
-                    #else
-                        settingsMenu
-                    #endif
-                }
-            }
+//            .toolbar {
+//                ToolbarItem(placement: .topBarTrailing) {
+//                        settingsMenu
+//                }
+//            }
             .sheet(isPresented: $openStatsSheet) {
                 StatsView()
             }

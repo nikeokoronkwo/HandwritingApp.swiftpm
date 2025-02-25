@@ -10,13 +10,30 @@ import SwiftData
 import SwiftUI
 
 struct HandWritingView: View {
+    @Environment(\.undoManager) private var undoManager
+    @Environment(\.modelContext) private var modelContext
+    @Environment(\.dismiss) private var dismiss
+
+    @Environment(\.colorScheme) private var colorScheme
+    
     /// The writing model for the given view, if any
     /// Used for populating existing data
     @Bindable var model: WritingModel
+    
+    /// The writing manager, used for the toolbar and toolset for configuring the ``WritingCanvas``
+    @StateObject var writingModel: WritingManager = WritingManager()
+
 
     /// The controller used for controlling, getting data from the ``WritingCanvas``
     @StateObject var writingController: WritingController = WritingController { drawing in
 
+    }
+    
+    /// The canvas that the ``WritingCanvas`` and ``ToolBarComponent`` are bound to
+    @State var canvasView = PKCanvasView()
+    
+    var imageForPractice: CGImage {
+        model.data.dotted_image(150)
     }
 
     init(model: WritingModel) {
@@ -27,10 +44,14 @@ struct HandWritingView: View {
             let drawing = try? PKDrawing(data: data)
             self._writingController = StateObject(
                 wrappedValue: WritingController(drawing: drawing) { drawing in
+                    
+                    model.result = drawing.dataRepresentation()
                 })
         } else {
             self._writingController = StateObject(
                 wrappedValue: WritingController { drawing in
+                    
+                    model.result = drawing.dataRepresentation()
                 })
         }
     }
@@ -38,16 +59,58 @@ struct HandWritingView: View {
     @Environment(\.presentationMode) private var presentationMode
 
     var body: some View {
-        ZStack {
-            Button {
-                presentationMode.wrappedValue.dismiss()
-            } label: {
-                Label {
-                    Text("Return")
-                } icon: {
-                    Image(systemName: "arrow.left")
+        ZStack(alignment: .bottom) {
+            GeometryReader { geometry in
+                ZStack {
+                    NoteBookWithTextBackground(spacing: 150, lines: 4) {
+                        if colorScheme == .dark {
+                            Image(
+                                imageForPractice,
+                                scale: 1, label: Text(model.data)
+                            )
+                            .colorInvert()
+                        } else {
+                            Image(
+                                imageForPractice,
+                                scale: 1, label: Text(model.data)
+                            )
+                        }
+                    }
+
+                    WritingCanvas(
+                        canvasView: Binding<PKCanvasView>(
+                            get: {
+                                return canvasView
+                            },
+                            set: { newValue in
+                                // set canvas drawing in manager
+                                writingController.drawing = newValue.drawing
+
+                                // update canvas
+                                canvasView = newValue
+                            }))
                 }
-                .padding()
+            }
+            // iOS 17.5
+            // The toolbar
+            VStack {
+                ToolBarComponent(canvasView: $canvasView)
+//                Text("\(index ?? -1)")
+            }
+        }
+        .environmentObject(writingModel)
+        .environmentObject(writingController)
+        .navigationBarBackButtonHidden()
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button {
+                    model.result = canvasView.drawing.dataRepresentation()
+                    
+                    dismiss()
+                } label: {
+                    Image(systemName: "chevron.left")
+                }
+
             }
         }
     }
@@ -108,13 +171,11 @@ struct CoreWritingView: WritingCanvasRepresentable {
     }
 
     var imageForLevel: CGImage {
-        level.info.value.dotted_image(
-            level.info.value.count < 15 ? 150 : UIScreen.main.bounds.width * 0.123)!
+        level.info.value.dotted_image(150)
     }
     
     var targetImageForLevel: CGImage {
-        level.info.value.image(
-            level.info.value.count < 15 ? 150 : UIScreen.main.bounds.width * 0.123)!
+        level.info.value.image(150)
     }
 
     func logOnExit() {
@@ -166,7 +227,6 @@ struct CoreWritingView: WritingCanvasRepresentable {
         prepareCanvas()
         
         writingController.onDrawing = { drawing in
-            debugPrint(currentModel, newModel, levelInfo)
             
             currentModel?.result = drawing.dataRepresentation()
             currentModel?.updated = Date.now
@@ -208,19 +268,22 @@ struct CoreWritingView: WritingCanvasRepresentable {
         ZStack(alignment: .bottom) {
             GeometryReader { geometry in
                 ZStack {
-                    NoteBookWithTextBackground(spacing: 150, lines: 4) {
-                        if colorScheme == .dark {
-                            Image(
-                                imageForLevel,
-                                scale: 1, label: Text(level.name)
-                            )
-                            .colorInvert()
-                        } else {
-                            Image(
-                                imageForLevel,
-                                scale: 1, label: Text(level.name)
-                            )
-                            .colorInvert()
+                    if levelType == .expert {
+                        NoteBookBackground(spacing: 150, lines: 4)
+                    } else {
+                        NoteBookWithTextBackground(spacing: 150, lines: 4) {
+                            if colorScheme == .dark {
+                                Image(
+                                    imageForLevel,
+                                    scale: 1, label: Text(level.name)
+                                )
+                                .colorInvert()
+                            } else {
+                                Image(
+                                    imageForLevel,
+                                    scale: 1, label: Text(level.name)
+                                )
+                            }
                         }
                     }
 
@@ -243,6 +306,9 @@ struct CoreWritingView: WritingCanvasRepresentable {
             VStack {
                 ToolBarComponent(canvasView: $canvasView)
 //                Text("\(index ?? -1)")
+                if levelType == .expert {
+                    Text("**Text**: \(level.info.value)")
+                }
             }
             if hasInteracted {
                 VStack {

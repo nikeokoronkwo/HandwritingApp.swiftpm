@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-@MainActor private func renderTextImage(_ str: String, font: String, size: CGFloat) -> CGImage? {
+@MainActor private func renderTextImage(_ str: String, font: String, size: CGFloat) -> CGImage {
     let renderer = ImageRenderer(
         content: Text(str)
             .font(Font.custom(font, size: size))
@@ -15,12 +15,15 @@ import SwiftUI
             .lineLimit(nil)
 
     )
-
-    return renderer.cgImage
+    
+    
+    debugPrint(renderer.cgImage, renderer.cgImage == nil, str, Text(str))
+    
+    return renderer.cgImage!
 }
 
 @MainActor private func renderTextImage(_ str: AttributedString, font: String, size: CGFloat)
-    -> CGImage?
+    -> CGImage
 {
     let renderer = ImageRenderer(
         content: Text(str)
@@ -29,17 +32,17 @@ import SwiftUI
             .lineLimit(nil)
     )
 
-    return renderer.cgImage
+    return renderer.cgImage!
 }
 
 extension String {
 
-    @MainActor func image(_ fontSize: CGFloat = 17) -> CGImage? {
+    @MainActor func image(_ fontSize: CGFloat = 17) -> CGImage {
         return renderTextImage(self, font: "Raleway-Thin", size: fontSize)
 
     }
 
-    @MainActor func dotted_image(_ fontSize: CGFloat = 17) -> CGImage? {
+    @MainActor func dotted_image(_ fontSize: CGFloat = 17) -> CGImage {
         return renderTextImage(self, font: "RalewayDots-Regular", size: fontSize)
 
     }
@@ -47,12 +50,12 @@ extension String {
 }
 
 extension AttributedString {
-    @MainActor func image(_ fontSize: CGFloat = 17) -> CGImage? {
+    @MainActor func image(_ fontSize: CGFloat = 17) -> CGImage {
         return renderTextImage(self, font: "Raleway-Thin", size: fontSize)
 
     }
 
-    @MainActor func dotted_image(_ fontSize: CGFloat = 17) -> CGImage? {
+    @MainActor func dotted_image(_ fontSize: CGFloat = 17) -> CGImage {
         return renderTextImage(self, font: "RalewayDots-Regular", size: fontSize)
 
     }
@@ -70,11 +73,7 @@ struct StringExtPreview: View {
 
     var body: some View {
         VStack {
-            if let img = text.dotted_image(size) {
-                Image(img, scale: 2, label: Text("f"))
-            } else {
-                Text("E no work")
-            }
+                Image(text.dotted_image(size), scale: 2, label: Text("f"))
         }
     }
 }
@@ -91,11 +90,7 @@ struct AttributedStringExtPreview: View {
 
     var body: some View {
         VStack {
-            if let img = text.image(size) {
-                Image(img, scale: 2, label: Text("f"))
-            } else {
-                Text("E no work")
-            }
+                Image(text.image(size) , scale: 2, label: Text("f"))
         }
     }
 }

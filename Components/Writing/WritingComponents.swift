@@ -30,11 +30,6 @@ struct WritingView: WritingCanvasRepresentable {
 
         if let drawing = controller.drawing {
             canvasView.drawing = drawing
-            if controller.imgData == nil {
-                self.writingController.imgData = controller.drawing?.image(
-                    from: canvasView.bounds, scale: 1.0
-                ).pngData()
-            }
         }
 
         self._canvasView = State(initialValue: canvasView)

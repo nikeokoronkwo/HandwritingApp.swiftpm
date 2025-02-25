@@ -42,7 +42,6 @@ struct WorkbookWritingView: View {
                 .toolbar {
                     ToolbarItem(placement: .topBarLeading) {
                         Button {
-                            debugPrint(writingController.drawing)
                             
                             // save data
                             if let d = writingController.drawing {

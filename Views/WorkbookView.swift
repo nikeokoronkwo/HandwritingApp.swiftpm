@@ -7,6 +7,7 @@
 
 import SwiftData
 import SwiftUI
+import PencilKit
 
 struct NewWorkbook: Hashable {
     var name: String
@@ -21,8 +22,6 @@ struct WorkbookView: View {
     @Query var workbooks: [Workbook]
     @Environment(\.modelContext) private var modelContext
 
-    /// Search Term for searching up a workbook
-    @State private var searchTerm: String = ""
 
     private let gridVSpacing: CGFloat = 40
 
@@ -35,31 +34,31 @@ struct WorkbookView: View {
     }
 
     var body: some View {
-        ScrollView {
-            LazyVGrid(
-                columns: gridItems,
-                alignment: .center,
-                spacing: gridVSpacing
-            ) {
-                ForEach(workbooks, id: \.lastAccessed) { wb in
-                    NavigationLink(value: wb) {
-                        WorkbookItemView(book: wb)
+        if workbooks.isEmpty {
+            Text("Workbooks are a great way to free-write and practice text writing on your own. To get started, click on the \"+\" button above!")
+                .font(.subheadline)
+        } else {
+            ScrollView {
+                LazyVGrid(
+                    columns: gridItems,
+                    alignment: .center,
+                    spacing: gridVSpacing
+                ) {
+                    ForEach(workbooks, id: \.lastAccessed) { wb in
+                        NavigationLink(value: wb) {
+                            WorkbookItemView(book: wb)
+                        }
+                    }
+                }
+                .padding()
+            }
+            .toolbar {
+                ToolbarItemGroup(placement: .topBarLeading) {
+                    NavigationLink(value: NewWorkbook(name: "Untitled")) {
+                        Image(systemName: "plus")
                     }
                 }
             }
-            .padding()
-        }
-        // TODO: Implement Searching
-        .searchable(text: $searchTerm)
-        .toolbar {
-            ToolbarItemGroup(placement: .topBarLeading) {
-                NavigationLink(value: NewWorkbook(name: "Untitled")) {
-                    Image(systemName: "plus")
-                }
-            }
-        }
-        .task {
-            debugPrint(workbooks)
         }
     }
 }
@@ -67,19 +66,23 @@ struct WorkbookView: View {
 /// A view used to displau a workbook item in the given grid
 struct WorkbookItemView: View {
     @Environment(\.modelContext) var modelContext
+    
     @Environment(\.colorScheme) var colorScheme
+    
     var book: Workbook
 
     private let size: CGFloat = 220
 
     var body: some View {
         Group {
-            if let data = book.imgData {
+            if let data = book.imgData ?? (book.data == nil ? nil : try? PKDrawing(data: book.data!).image(from: CGRect(x: 0, y: 0, width: size, height: size), scale: 1).pngData()!) {
                 ImageFromData(data)
                     .resizable()
+                    .scaledToFit()
+                    .frame(maxHeight: size * 0.66, alignment: .top)
             } else {
                 RoundedRectangle(cornerRadius: 15)
-                    .fill(Color.white)
+                    .fill(Color(white: 0.4))
             }
         }
         .frame(width: size, height: size)
@@ -88,7 +91,7 @@ struct WorkbookItemView: View {
             Rectangle()
                 .fill(
                     colorScheme == .dark
-                        ? Color(UIColor.systemBackground).opacity(0.75)
+                        ? Color(white: 0.2)
                         : Color.secondary.opacity(0.15)
                 )
                 .clipShape(
@@ -127,6 +130,7 @@ struct WorkbookItemView: View {
 
 #Preview("View in Dashboard") {
     DashboardView(appActivity: .workbook)
+        .preferredColorScheme(.light)
 }
 
 #Preview("WorkbookView with Swift Data") {

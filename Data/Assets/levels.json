@@ -10,7 +10,7 @@
     },
     {
       "index": 2,
-      "name": "Second Step",
+      "name": "Second Letter",
       "info": {
         "type": "word",
         "value": "b"
@@ -18,7 +18,7 @@
     },
     {
       "index": 3,
-      "name": "C",
+      "name": "Third Letter",
       "info": {
         "type": "word",
         "value": "c"
@@ -31,17 +31,260 @@
         "type": "word",
         "value": "abc"
       }
+    },
+    {
+      "index": 5,
+      "name": "Spaced Letters",
+      "info": {
+        "type": "word",
+        "value": "a b c"
+      }
     }
+    ,
+    {
+      "index": 6,
+      "name": "First Five Letters",
+      "info": {
+        "type": "word",
+        "value": "abcde"
+      }
+    },
+    {
+      "index": 7,
+      "name": "First Eight Letters",
+      "info": {
+        "type": "word",
+        "value": "abcdefgh"
+      }
+    },
+    {
+      "index": 8,
+      "name": "Next Eight Letters",
+      "info": {
+        "type": "word",
+        "value": "ijklmnop"
+      }
+    }
+    ,{
+        "index": 9,
+        "name": "Last Ten Letters",
+        "info": {
+          "type": "word",
+          "value": "qrstuvwxyz"
+        }
+      }
+    ,{
+        "index": 10,
+        "name": "First Word",
+        "info": {
+          "type": "word",
+          "value": "word"
+        }
+      }
+    ,{
+        "index": 11,
+        "name": "Lamb",
+        "info": {
+          "type": "word",
+          "value": "lamb"
+        }
+      }
+    ,{
+        "index": 12,
+        "name": "Apple",
+        "info": {
+          "type": "word",
+          "value": "apple"
+        }
+      }
+    ,{
+        "index": 13,
+        "name": "System",
+        "info": {
+          "type": "word",
+          "value": "system"
+        }
+      }
+    ,{
+        "index": 14,
+        "name": "Handwriting",
+        "info": {
+          "type": "word",
+          "value": "handwriting"
+        }
+      }
+    ,{
+        "index": 15,
+        "name": "Capital Letters",
+        "info": {
+          "type": "word",
+          "value": "Aa"
+        }
+      }
+    ,{
+        "index": 16,
+        "name": "Spaced Letters",
+        "info": {
+          "type": "word",
+          "value": "Aa Bb Cc"
+        }
+      }
+    ,{
+        "index": 17,
+        "name": "Mary",
+        "info": {
+          "type": "word",
+          "value": "Mary"
+        }
+      }
+    ,{
+        "index": 18,
+        "name": "Harrison",
+        "info": {
+          "type": "word",
+          "value": "Harrison"
+        }
+      }
+    ,{
+        "index": 19,
+        "name": "Website",
+        "info": {
+          "type": "word",
+          "value": "website"
+        }
+      }
+    ,{
+        "index": 20,
+        "name": "Oxymoron",
+        "info": {
+          "type": "word",
+          "value": "Oxymoron"
+        }
+      }
   ],
   "advanced": [
     {
       "index": 1,
-      "name": "Mary had a little lamb",
+      "name": "My lamb",
+      "info": {
+        "type": "word",
+        "value": "My lamb"
+      }
+    },
+    {
+      "index": 2,
+      "name": "Multiline text",
+      "info": {
+        "type": "word",
+        "value": "One second\nplease"
+      }
+    },
+    {
+      "index": 3,
+      "name": "Water Break!",
+      "info": {
+        "type": "word",
+        "value": "water break"
+      }
+    },
+    {
+      "index": 4,
+      "name": "Music",
+      "info": {
+        "type": "word",
+        "value": "do re mi fa\nso la ti do"
+      }
+    },
+    {
+      "index": 5,
+      "name": "Fountain",
+      "info": {
+        "type": "word",
+        "value": "Water Fountain"
+      }
+    },
+    {
+      "index": 6,
+      "name": "Boy",
+      "info": {
+        "type": "word",
+        "value": "I am a boy"
+      }
+    },
+    {
+      "index": 7,
+      "name": "Girl",
+      "info": {
+        "type": "word",
+        "value": "I am a girl"
+      }
+    },
+    {
+      "index": 8,
+      "name": "Communication",
+      "info": {
+        "type": "word",
+        "value": "Communication\niskey"
+      }
+    },
+    {
+      "index": 9,
+      "name": "Write",
+      "info": {
+        "type": "word",
+        "value": "I can write\nwell"
+      }
+    },
+    {
+      "index": 10,
+      "name": "Advanced Handwriting",
+      "info": {
+        "type": "word",
+        "value": "Advanced\nHandwriting"
+      }
+    }
+  ],
+  "expert": [{
+      "index": 1,
+      "name": "Expert Handwriting",
+      "info": {
+        "type": "word",
+        "value": "Expert Handwriting"
+      }
+  }, {
+      "index": 2,
+      "name": "Mary",
       "info": {
         "type": "word",
         "value": "Mary had a little lamb"
       }
-    }
-  ],
-  "expert": []
+  }, {
+      "index": 3,
+      "name": "Handwriting is great",
+      "info": {
+        "type": "word",
+        "value": "Handwriting is great"
+      }
+  }, {
+      "index": 4,
+      "name": "22560",
+      "info": {
+        "type": "word",
+        "value": "twenty-two thousand, five hundred and sixty"
+      }
+  }, {
+      "index": 5,
+      "name": "5th January",
+      "info": {
+        "type": "word",
+        "value": "The fifth of January"
+      }
+  }, {
+      "index": 6,
+      "name": "Complicated",
+      "info": {
+        "type": "word",
+        "value": "Expert Handwriting"
+      }
+  }]
 }

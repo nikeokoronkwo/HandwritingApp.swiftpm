@@ -24,7 +24,7 @@ func grayscale(_ img: CGImage) -> CGImage? {
 
         let width = img.width
         let height = img.height
-        let count = width * height
+        _ = width * height
 
         let sourceBuffer = try vImage_Buffer(cgImage: img, format: sourceFormat)
 
@@ -63,8 +63,8 @@ func ssim(_ img1: CGImage, _ img2: CGImage) throws -> Float {
     debugPrint("===========================")
 
     // grayscale images
-    let bw_img1 = grayscale(img1) ?? img1
-    let bw_img2 = grayscale(img2) ?? img2
+//    let bw_img1 = grayscale(img1) ?? img1
+//    let bw_img2 = grayscale(img2) ?? img2
 
     // get two images
 
@@ -141,9 +141,9 @@ func ssim(_ img1: CGImage, _ img2: CGImage) throws -> Float {
     //
     //    vDSP_normalize(img1PixelArray, 1, nil, 1, &mean_x, &stdev_x, vDSP_Length(count))
     //    vDSP_normalize(img2PixelArray, 1, nil, 1, &mean_y, &stdev_y, vDSP_Length(count))
-    var mean_x = vDSP.mean(img1PixelArray)
-    var mean_y = vDSP.mean(img2PixelArray)
-    var (stdev_x, stdev_y) = {
+    let mean_x = vDSP.mean(img1PixelArray)
+    let mean_y = vDSP.mean(img2PixelArray)
+    let (stdev_x, stdev_y) = {
         if #available(macCatalyst 18.0, iOS 18.0, *) {
             return (vDSP.standardDeviation(img1PixelArray), vDSP.standardDeviation(img2PixelArray))
         } else {
@@ -310,14 +310,14 @@ func createTestGradientImage(width: Int, height: Int) -> CGImage? {
     let t1 = "SSIM".dotted_image(20)
     let t2 = "SSIM".dotted_image(20)
 
-    SSIMTestingInterface(c1: t1!, c2: t2!)
+    SSIMTestingInterface(c1: t1, c2: t2)
 }
 
 #Preview("Dotted Text vs Text SSIM") {
     let t1 = "SSIM".dotted_image(20)
     let t2 = "SSIM".image(20)
 
-    SSIMTestingInterface(c1: t1!, c2: t2!)
+    SSIMTestingInterface(c1: t1, c2: t2)
 }
 
 //#Preview("Unrelated Text SSIM") {
@@ -331,5 +331,5 @@ func createTestGradientImage(width: Int, height: Int) -> CGImage? {
     let t1 = "SSIM".dotted_image(20)
     let t2 = "SXIM".dotted_image(20)
 
-    SSIMTestingInterface(c1: t1!, c2: t2!)
+    SSIMTestingInterface(c1: t1, c2: t2)
 }

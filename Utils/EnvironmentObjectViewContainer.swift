@@ -199,7 +199,6 @@ struct EnvironmentObjectViewContainer<V: View>: View {
         Group {
             content
         }
-        //        .environment(\.levelModel, model)
         .environmentObject(model)
 
     }
